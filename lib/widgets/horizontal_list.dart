@@ -56,7 +56,7 @@ class Category extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(2),
       child: InkWell(
-        onTap: () => print("object"),
+        onTap: () => print(image_caption),
         child: Column(
           children: [
            Container(

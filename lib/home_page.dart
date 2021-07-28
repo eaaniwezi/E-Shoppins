@@ -91,6 +91,8 @@ class _HomePageState extends State<HomePage>
     ),
   ];
 
+  //  String postOrientation = "grid";
+
   @override
   void initState() {
     super.initState();
@@ -132,26 +134,65 @@ class _HomePageState extends State<HomePage>
       body: new ListView(
         children: [
           _imageCarousel(),
-          new Padding(
-            padding: const EdgeInsets.all(15),
-            child: Text(
-              "Categories",
-              style: TextStyle(color: Colors.white, fontSize: 18),
+          Padding(
+              padding: const EdgeInsets.all(15),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.category,
+                   color: Colors.white,
+                ),
+                new Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Text(
+                    "Categories",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ],
             ),
           ),
           HorizontalList(),
-             new Padding(
+          new Padding(
             padding: const EdgeInsets.all(15),
-            child: Text(
-              "Recent products",
-              style: TextStyle(color: Colors.white, fontSize: 18),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.trending_up_outlined,
+                  color: Colors.white,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Popular products",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+                // Spacer(),
+                // IconButton(onPressed: () {
+                //    setPostOrientation("list");
+                // }, icon: Icon(Icons.format_list_bulleted, color:  postOrientation == 'list'? Style.Colors.secondColor : Colors.white)),
+                // IconButton(onPressed: () {
+                //     setPostOrientation("grid");
+                // }, icon: Icon(Icons.apps, color:  postOrientation == 'grid'? Style.Colors.secondColor : Colors.white)),
+                // IconButton(onPressed: () {
+                //     setPostOrientation("full");
+                // }, icon: Icon(Icons.format_line_spacing_rounded, color: postOrientation == 'grid'? Style.Colors.secondColor : Colors.white)),
+              ],
             ),
           ),
           RecentProducts(),
+          SizedBox(height: 10)
         ],
       ),
     );
   }
+
+  // setPostOrientation(String postOrientation) {
+  //   setState(() {
+  //     this.postOrientation = postOrientation;
+  //   });
+  // }
 
   Widget _imageCarousel() {
     return Container(
