@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "258082042210",
+    "project_id": "e-shoppins",
+    "storage_bucket": "e-shoppins.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258082042210:android:f92d04013abd095f4f3c3b",
+        "android_client_info": {
+          "package_name": "com.example.ecommerce_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "258082042210-ou63o2ebdj5nms3uc4j7uisg47mpicu4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ecommerce_app",
+            "certificate_hash": "68beb9691a41ca25064c640c03704a5310d56431"
+          }
+        },
+        {
+          "client_id": "258082042210-547aat3lo2iuv39driu4rc9pmsgn5v6s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVyzQDmEjcmEyYK9yYGSA0tatA-Zy3GNk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "258082042210-547aat3lo2iuv39driu4rc9pmsgn5v6s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

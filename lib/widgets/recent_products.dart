@@ -17,15 +17,18 @@ class RecentProducts extends StatelessWidget {
         scrollDirection: Axis.vertical,
         itemCount: _popularProducts.length,
         itemBuilder: (BuildContext context, int index) {
-         return SingleProductGridView(
-           name: _popularProducts[index].name, 
-           picture: _popularProducts[index].picture,
-           old_price: _popularProducts[index].old_price,
-           price: _popularProducts[index].price,
-           description: _popularProducts[index].description,
-           colors: _popularProducts[index].colors,
-           otherPictures: _popularProducts[index].otherPictures,
-           );
+         return Padding(
+           padding: const EdgeInsets.only(left: 2, right: 2, top: 0.5, bottom: 0.05),
+           child: SingleProductGridView(
+             name: _popularProducts[index].name, 
+             picture: _popularProducts[index].picture,
+             old_price: _popularProducts[index].old_price,
+             price: _popularProducts[index].price,
+             description: _popularProducts[index].description,
+             colors: _popularProducts[index].colors,
+             otherPictures: _popularProducts[index].otherPictures,
+             ),
+         );
         },
         gridDelegate:
             new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),

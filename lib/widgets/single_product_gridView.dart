@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/pages/product_details.dart';
+import 'package:ecommerce_app/pages/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
 
@@ -25,7 +25,7 @@ class SingleProductGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-          builder: (context) => new ProductDetails(
+          builder: (context) => new ProductDetailsScreen(
                 product_details_current_price: price,
                 product_details_name: name,
                 product_details_old_price: old_price,

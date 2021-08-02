@@ -1,8 +1,9 @@
 import 'package:ecommerce_app/home_page.dart';
+import 'package:ecommerce_app/pages/cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
 
-class ProductDetails extends StatefulWidget {
+class ProductDetailsScreen extends StatefulWidget {
   // ignore: non_constant_identifier_names
   final product_details_name;
   // ignore: non_constant_identifier_names
@@ -17,7 +18,7 @@ class ProductDetails extends StatefulWidget {
   final product_details_color;
   // ignore: non_constant_identifier_names
   final other_pictures;
-  const ProductDetails({
+  const ProductDetailsScreen({
     Key? key,
     // ignore: non_constant_identifier_names
     this.product_details_name,
@@ -36,10 +37,10 @@ class ProductDetails extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ProductDetailsState createState() => _ProductDetailsState();
+  _ProductDetailsScreenState createState() => _ProductDetailsScreenState();
 }
 
-class _ProductDetailsState extends State<ProductDetails> {
+class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   var _maxLines = 3;
   int selectedImage = 0;
   int selectedColor = 0;
@@ -304,7 +305,9 @@ class _ProductDetailsState extends State<ProductDetails> {
       actions: [
         // new IconButton(onPressed: () {}, icon: Icon(Icons.search)),
         new IconButton(
-            onPressed: () {}, icon: Icon(Icons.shopping_cart_outlined)),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen()));
+            }, icon: Icon(Icons.shopping_cart_outlined)),
       ],
       leading: IconButton(
           onPressed: () {

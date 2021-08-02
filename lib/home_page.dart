@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/pages/cart_screen.dart';
 import 'package:ecommerce_app/widgets/horizontal_list.dart';
 import 'package:ecommerce_app/widgets/recent_products.dart';
 import 'package:flutter/material.dart';
@@ -125,7 +126,9 @@ class _HomePageState extends State<HomePage>
         actions: [
           new IconButton(onPressed: () {}, icon: Icon(Icons.search)),
           new IconButton(
-              onPressed: () {}, icon: Icon(Icons.shopping_cart_outlined)),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen()));
+              }, icon: Icon(Icons.shopping_cart_outlined)),
         ],
       ),
       drawer: new Drawer(
