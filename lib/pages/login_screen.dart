@@ -16,6 +16,10 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final GoogleSignIn googleSignIn = new GoogleSignIn();
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+  late final User user;
+  // late final O
+
   late SharedPreferences preferences;
   late bool loading;
   late bool isLogedin;
@@ -47,33 +51,77 @@ class _LoginScreenState extends State<LoginScreen> {
       loading = true;
     });
     GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-    GoogleSignInAuthentication googleSignInAuthentication = await googleUser!.authentication;
-    FirebaseUser? firebaseUser = await firebaseAuth'; n,.signInWithGoogle(
+    GoogleSignInAuthentication googleSignInAuthentication =
+        await googleUser!.authentication;
+    OAuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
-      accessToken: googleSignInAuthentication.accessToken
     );
+    await firebaseAuth.signInWithCredential(credential);
+    // ignore: await_only_futures
+    user = await firebaseAuth.currentUser!;
 
-    if(firebaseUser != null) {
-      
+    // ignore: unnecessary_null_comparison
+    if (user != null) {
+      final QuerySnapshot result = await FirebaseFirestore.instance
+          .collection("users")
+          .where("id", isEqualTo: user.uid)
+          .get();
+      final List<DocumentSnapshot> documents = result.docs;
+
+      if (documents.length == 0) {
+        FirebaseFirestore.instance.collection("users").doc(user.uid).set({
+          "id": user.uid,
+          "username": user.displayName,
+          "email": user.email,
+          "profilePicture": user.photoURL,
+          "phoneNumber": user.phoneNumber,
+        });
+
+        await preferences.setString("id", user.uid);
+        await preferences.setString("username", user.displayName.toString());
+        await preferences.setString("email", user.email.toString());
+        await preferences.setString("profilePicture", user.photoURL.toString());
+        await preferences.setString("phoneNumber", user.phoneNumber.toString());
+      } else {
+        await preferences.setString("id", documents[0]['id']);
+        await preferences.setString("username", documents[0]['username']);
+        await preferences.setString("email", documents[0]['email']);
+        await preferences.setString(
+            "photoURL", documents[0]['photoURL']);
+        await preferences.setString(
+            "phoneNumber", documents[0]['phoneNumber']);
+      }
+      Fluttertoast.showToast(msg: "Succesful");
+      setState(() {
+        loading = false;
+      });
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
+    } else {
+      Fluttertoast.showToast(msg: "Failed");
     }
-}
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Center(
+        child: GestureDetector(
+          onTap: (){
+            handleSignIn();
+          },
+          child: Container(
+            color: Colors.red,
+            child: Text(
+              "Google",
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
-  // handleSignIn(GoogleSignInAccount account) async {
-  //   if (account != null) {
-  //     await createUserInFirestore();
-  //     // print('User signed in!: $account');
-  //     setState(() {
-  //       isAuth = true;
-  //     });
-  //     //  configurePushNotifications();
-  //   } else {
-  //     setState(() {
-  //       isAuth = false;
-  //     });
-  //   }
-  // }
