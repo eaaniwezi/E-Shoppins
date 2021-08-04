@@ -1,8 +1,6 @@
-import 'package:ecommerce_app/home_page.dart';
-import 'package:ecommerce_app/pages/login_screen.dart';
+import 'package:ecommerce_app/pages/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:ecommerce_app/style/theme.dart' as Style;
 
 void main() {
   runApp(MyApp());
@@ -34,7 +32,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 primarySwatch: Colors.red,
               ),
-              home: LoginScreen(),
+              home: WelcomeScreen(),
             );
           }
           return Container();

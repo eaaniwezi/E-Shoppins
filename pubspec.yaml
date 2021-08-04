@@ -30,6 +30,7 @@ dependencies:
   shared_preferences: ^2.0.6
   fluttertoast: ^8.0.1-nullsafety.0
   firebase_core: ^1.4.0
+  google_fonts: ^2.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -53,6 +54,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - images/image/splash.jpg
+    - images/image/splash1.jpg
     - images/image/1.jpg
     - images/image/2.jpg
     - images/image/3.jpg
