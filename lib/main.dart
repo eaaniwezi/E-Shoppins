@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'E-Shoppins',
               theme: ThemeData(
-                primarySwatch: Colors.red,
+                // primarySwatch: Colors.red,
               ),
               home: WelcomeScreen(),
             );

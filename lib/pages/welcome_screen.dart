@@ -1,4 +1,6 @@
 import 'package:ecommerce_app/home_page.dart';
+import 'package:ecommerce_app/pages/create_account_screen.dart';
+import 'package:ecommerce_app/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -178,7 +180,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-          print("no account created");
+        Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAccountScreen()));
         },
         child: Container(
           width: 130,
@@ -205,7 +207,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        },
         child: Container(
           height: 50,
           decoration: BoxDecoration(
