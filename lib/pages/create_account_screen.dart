@@ -181,17 +181,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Widget registerButton() {
     return GestureDetector(
       onTap: () async {
-        setState(() {
-          circular = true;
-        });
+        // setState(() {
+        //   circular = true;
+        // });
         try {
           registerUser();
         } catch (e) {
           print(e);
-          _usernameController.text = "";
-          _passwordController.text = "";
-          _passwordController2.text = "";
-          _emailController.text = "";
         }
       },
       child: Container(
@@ -370,15 +366,21 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   print(err.toString()),
                   Fluttertoast.showToast(msg: err.toString()),
                 });
-print("userCreated");
+        print("userCreated");
+        // ignore: unnecessary_null_comparison
       } else {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomePage()));
+          Fluttertoast.showToast(msg: "Thanks for choosing us  ${_usernameController.text}");
       }
+
+      // Navigator.pop(context);
+      // return Fluttertoast.showToast(msg: "Failed in creating an account");
+    } else {
       setState(() {
         circular = false;
       });
-      return Fluttertoast.showToast(msg: "Failed in creating an account");
+      Fluttertoast.showToast(msg: "Validator Error!!");
     }
   }
 }

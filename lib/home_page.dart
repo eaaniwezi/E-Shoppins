@@ -1,8 +1,11 @@
 import 'package:ecommerce_app/pages/cart_screen.dart';
+import 'package:ecommerce_app/pages/welcome_screen.dart';
 import 'package:ecommerce_app/widgets/horizontal_list.dart';
 import 'package:ecommerce_app/widgets/recent_products.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:page_indicator/page_indicator.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,6 +19,7 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   PageController pageController =
       PageController(viewportFraction: 1, keepPage: true);
+  final GoogleSignIn googleSignIn = new GoogleSignIn();
 
   List<Widget> _list = [
     Container(
@@ -127,8 +131,10 @@ class _HomePageState extends State<HomePage>
           new IconButton(onPressed: () {}, icon: Icon(Icons.search)),
           new IconButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen()));
-              }, icon: Icon(Icons.shopping_cart_outlined)),
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CartScreen()));
+              },
+              icon: Icon(Icons.shopping_cart_outlined)),
         ],
       ),
       drawer: new Drawer(
@@ -138,12 +144,12 @@ class _HomePageState extends State<HomePage>
         children: [
           _imageCarousel(),
           Padding(
-              padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: Row(
               children: [
                 Icon(
                   Icons.category,
-                   color: Colors.white,
+                  color: Colors.white,
                 ),
                 new Padding(
                   padding: const EdgeInsets.all(15),
@@ -280,6 +286,22 @@ class _HomePageState extends State<HomePage>
             child: ListTile(
                 title: Text("About"),
                 leading: Icon(Icons.help, color: Style.Colors.secondColor))),
+        InkWell(
+            onTap: () {
+              googleSignIn.signOut().then((value) => {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WelcomeScreen())),
+                  });
+              FirebaseAuth.instance.signOut().then((value) {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => WelcomeScreen()));
+              });
+            },
+            child: ListTile(
+                title: Text("Logout"),
+                leading: Icon(Icons.logout, color: Style.Colors.secondColor))),
       ],
     );
   }

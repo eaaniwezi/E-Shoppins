@@ -1,6 +1,9 @@
+import 'package:ecommerce_app/home_page.dart';
 import 'package:ecommerce_app/pages/create_account_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,6 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  bool circular = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _globalkey = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
@@ -96,8 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(width: 5.0),
         InkWell(
           onTap: () {
-           Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAccountScreen()));
-   
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CreateAccountScreen()));
           },
           child: Text(
             'Create One',
@@ -155,7 +160,39 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget loginButton() {
     return GestureDetector(
-      onTap: () {},
+      onTap: () async {
+        setState(() {
+          circular = true;
+        });
+        try {
+          if (_globalkey.currentState!.validate()) {
+            // ignore: unused_local_variable
+            User? user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
+                email: _emailController.text,
+                password: _passwordController.text)).user;
+            // ignore: unnecessary_null_comparison
+            if (user != null) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                  (route) => false);
+                 Fluttertoast.showToast(msg: "Welcome back ${_emailController.text}");
+            }
+          } else {
+            setState(() {
+              circular = false;
+            });
+             Fluttertoast.showToast(msg: "Validator Errors");
+          }
+        } catch (e) {
+          print(e.toString());
+            Fluttertoast.showToast(msg: e.toString());
+              setState(() {
+            circular = false;
+          });
+            Fluttertoast.showToast(msg: "Can't login");
+        }
+      },
       child: Container(
         width: 200,
         height: 45.0,
