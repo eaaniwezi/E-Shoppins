@@ -254,7 +254,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ],
         ),
         Text(
-          "Life is short,\nmake every outfit count",
+          "Life is short,\nmake every outfit count!!",
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         SizedBox(

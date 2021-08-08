@@ -1,6 +1,13 @@
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/home_page.dart';
 import 'package:ecommerce_app/pages/login_screen.dart';
+import 'package:ecommerce_app/database/users.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({Key? key}) : super(key: key);
@@ -25,15 +32,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   }
 
   var confirmPass;
-
+  bool circular = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _globalkey = GlobalKey<FormState>();
+  UserServices _userServices = UserServices();
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _passwordController2 = TextEditingController();
-
-  bool circular = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +51,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Form(
-              key: _globalkey,
+            key: _globalkey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,7 +79,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
                 Padding(
-                 padding: const EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                       horizontal: 20.0, vertical: 25),
                   child: Column(
                     children: [
@@ -130,7 +137,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   Widget confirmPasswordTextField() {
     return TextFormField(
-      validator: ( value) {
+      validator: (value) {
         if (value!.isEmpty) {
           return "Please Re-Enter New Password";
         } else if (value.length < 8) {
@@ -173,7 +180,20 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   Widget registerButton() {
     return GestureDetector(
-      onTap: () async {},
+      onTap: () async {
+        setState(() {
+          circular = true;
+        });
+        try {
+          registerUser();
+        } catch (e) {
+          print(e);
+          _usernameController.text = "";
+          _passwordController.text = "";
+          _passwordController2.text = "";
+          _emailController.text = "";
+        }
+      },
       child: Container(
         width: 200,
         height: 45.0,
@@ -203,8 +223,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       controller: _passwordController,
       obscureText: !_showPassword,
       validator: (value) {
-          confirmPass = value;
-           if (value!.isEmpty) {
+        confirmPass = value;
+        if (value!.isEmpty) {
           return "Please Enter New Password";
         } else if (value.length < 8) {
           return "Password must be atleast 8 characters long";
@@ -212,7 +232,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           return null;
         }
       },
-     
       decoration: InputDecoration(
         prefixIcon: Icon(
           Icons.lock,
@@ -324,5 +343,42 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         ),
       ),
     );
+  }
+
+  Future registerUser() async {
+    FormState? formState = _globalkey.currentState;
+
+    if (formState!.validate()) {
+      formState.reset();
+      print("user in");
+      // ignore: await_only_futures
+      User? user = await firebaseAuth.currentUser;
+      // ignore: unnecessary_null_comparison
+      if (user == null) {
+        firebaseAuth
+            .createUserWithEmailAndPassword(
+                email: _emailController.text,
+                password: _passwordController.text)
+            .then((user) => {
+                  _userServices.createUser({
+                    "userId": user.user!.uid,
+                    "username": _usernameController.text,
+                    "email": _emailController.text,
+                  })
+                })
+            .catchError((err) => {
+                  print(err.toString()),
+                  Fluttertoast.showToast(msg: err.toString()),
+                });
+print("userCreated");
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
+      }
+      setState(() {
+        circular = false;
+      });
+      return Fluttertoast.showToast(msg: "Failed in creating an account");
+    }
   }
 }
