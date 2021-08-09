@@ -124,17 +124,29 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
       backgroundColor: Style.Colors.mainColor,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         elevation: 0,
-        title: Text('E-Shoppins'),
+        title: Text(
+          'E-Shoppins',
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
         backgroundColor: Style.Colors.mainColor,
         actions: [
-          new IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+          new IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              )),
           new IconButton(
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => CartScreen()));
               },
-              icon: Icon(Icons.shopping_cart_outlined)),
+              icon: Icon(
+                Icons.shopping_cart_outlined,
+                color: Colors.white,
+              )),
         ],
       ),
       drawer: new Drawer(

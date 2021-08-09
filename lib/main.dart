@@ -1,3 +1,5 @@
+import 'package:ecommerce_app/home_page.dart';
+import 'package:ecommerce_app/pages/admin_home_screen.dart';
 import 'package:ecommerce_app/pages/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +34,9 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 // primarySwatch: Colors.red,
               ),
-              home: WelcomeScreen(),
+              home:  AdminHomeScreen(),
+              // home: WelcomeScreen(),
+              // home: HomePage(),
             );
           }
           return Container();

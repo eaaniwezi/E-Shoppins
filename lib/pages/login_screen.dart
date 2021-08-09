@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/home_page.dart';
+import 'package:ecommerce_app/pages/admin_home_screen.dart';
 import 'package:ecommerce_app/pages/create_account_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -82,11 +83,40 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 15.0),
                 createAccount(),
+                SizedBox(height: 15.0),
+                isAdmin(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget isAdmin() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'Is Admin? ',
+          style: TextStyle(fontFamily: 'Montserrat'),
+        ),
+        SizedBox(width: 5.0),
+        InkWell(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AdminHomeScreen()));
+          },
+          child: Text(
+            'Click to login',
+            style: TextStyle(
+                color: Style.Colors.secondColor,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline),
+          ),
+        )
+      ],
     );
   }
 
@@ -167,30 +197,33 @@ class _LoginScreenState extends State<LoginScreen> {
         try {
           if (_globalkey.currentState!.validate()) {
             // ignore: unused_local_variable
-            User? user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
-                email: _emailController.text,
-                password: _passwordController.text)).user;
+            User? user = (await FirebaseAuth.instance
+                    .signInWithEmailAndPassword(
+                        email: _emailController.text,
+                        password: _passwordController.text))
+                .user;
             // ignore: unnecessary_null_comparison
             if (user != null) {
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
                   (route) => false);
-                 Fluttertoast.showToast(msg: "Welcome back ${_emailController.text}");
+              Fluttertoast.showToast(
+                  msg: "Welcome back ${_emailController.text}");
             }
           } else {
             setState(() {
               circular = false;
             });
-             Fluttertoast.showToast(msg: "Validator Errors");
+            Fluttertoast.showToast(msg: "Validator Errors");
           }
         } catch (e) {
           print(e.toString());
-            Fluttertoast.showToast(msg: e.toString());
-              setState(() {
+          Fluttertoast.showToast(msg: e.toString());
+          setState(() {
             circular = false;
           });
-            Fluttertoast.showToast(msg: "Can't login");
+          Fluttertoast.showToast(msg: "Can't login");
         }
       },
       child: Container(
