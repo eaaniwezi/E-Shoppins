@@ -3,8 +3,10 @@ import 'package:uuid/uuid.dart';
 import 'dart:convert';
 
 class CategoryService {
+  // static CategoryService _instance = CategoryService();
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   String ref = 'categories';
+  late Future<QuerySnapshot> searchResultsFuture;
 
   void createCategory(String name) {
     var id = Uuid();
@@ -23,7 +25,16 @@ class CategoryService {
       _firebaseFirestore
           .collection(ref)
           .where('category', isEqualTo: suggestion)
-        .get()
+          .get()
           .then((snaps) => snaps.docs);
-       
+
+  handleSearchCategories(String query) {
+    Future<QuerySnapshot<Map<String, dynamic>>> categories = _firebaseFirestore
+        .collection(ref)
+        .where("category", isGreaterThanOrEqualTo: query)
+        .where("category", isGreaterThanOrEqualTo: query + 'z')
+        .where('category', isEqualTo: query)
+        .get();
+    searchResultsFuture = categories;
+  }
 }
