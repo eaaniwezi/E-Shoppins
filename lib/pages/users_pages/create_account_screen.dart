@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/home_page.dart';
-import 'package:ecommerce_app/pages/login_screen.dart';
+import 'package:ecommerce_app/pages/users_pages/login_screen.dart';
 import 'package:ecommerce_app/database/users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';

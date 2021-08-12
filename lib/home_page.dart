@@ -1,5 +1,5 @@
-import 'package:ecommerce_app/pages/cart_screen.dart';
-import 'package:ecommerce_app/pages/welcome_screen.dart';
+import 'package:ecommerce_app/pages/users_pages/cart_screen.dart';
+import 'package:ecommerce_app/pages/users_pages/welcome_screen.dart';
 import 'package:ecommerce_app/widgets/horizontal_list.dart';
 import 'package:ecommerce_app/widgets/recent_products.dart';
 import 'package:firebase_auth/firebase_auth.dart';

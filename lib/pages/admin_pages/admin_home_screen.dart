@@ -1,6 +1,7 @@
-import '../database/add_brand.dart';
+import 'package:ecommerce_app/pages/admin_pages/admin_add_product_screen.dart';
+import '../../database/brand.dart';
 import 'package:flutter/material.dart';
-import '../database/add_category.dart';
+import '../../database/category.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,8 +16,8 @@ class AdminHomeScreen extends StatefulWidget {
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
   GlobalKey<FormState> _brandKey = GlobalKey();
   GlobalKey<FormState> _categoryKey = GlobalKey();
-  AddBrandService _addBrandService = AddBrandService();
-  AddCategoryService _addCategoryService = AddCategoryService();
+  BrandService _addBrandService = BrandService();
+  CategoryService _addCategoryService = CategoryService();
   TextEditingController _brandController = TextEditingController();
   TextEditingController _categoryController = TextEditingController();
   @override
@@ -77,7 +78,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 leading:
                     Icon(Icons.dashboard, color: Style.Colors.secondColor))),
         InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AdminAddProductScreen()));
+            },
             child: ListTile(
                 title: Text("Add Product"),
                 leading: Icon(Icons.add, color: Style.Colors.secondColor))),
@@ -89,9 +96,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     color: Style.Colors.secondColor))),
         InkWell(
             onTap: () {
-              // Navigator.pop(context);
-              print("object");
-              _addCategory();
+              try {
+                _addCategory();
+              } catch (e) {
+                print(e.toString());
+                Fluttertoast.showToast(msg: e.toString());
+              }
             },
             child: ListTile(
                 title: Text("Add Category"),
@@ -99,7 +109,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     color: Style.Colors.secondColor))),
         InkWell(
             onTap: () {
-              _addBrand();
+              try {
+                _addBrand();
+              } catch (e) {
+                print(e.toString());
+                Fluttertoast.showToast(msg: e.toString());
+              }
             },
             child: ListTile(
                 title: Text("Add brand"),
@@ -480,7 +495,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         child: TextFormField(
           controller: _categoryController,
           validator: (value) {
-            if (value!.trim().isEmpty) {
+            if (value!.isEmpty) {
               return "Field can't be empty";
             }
           },
@@ -489,13 +504,25 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       ),
       actions: [
         // ignore: deprecated_member_use
-        FlatButton(child: Text("Add"), onPressed: () {
-          // ignore: unnecessary_null_comparison
-          if (_categoryController.text != null) {
-            _addCategoryService.createCategory(_categoryController.text);
-          } Fluttertoast.showToast(msg: "Succesfully created ${_categoryController.text} category");
-          Navigator.pop(context);
-        }),
+        FlatButton(
+            child: Text("Add"),
+            onPressed: () {
+              // ignore: unnecessary_null_comparison
+              if (_categoryController.text.isNotEmpty) {
+                print("catergory: ${_categoryController.text}");
+                _addCategoryService.createCategory(_categoryController.text);
+                Fluttertoast.showToast(
+                    msg:
+                        "Succesfully created ${_categoryController.text} category");
+                _categoryController.text = '';
+                Navigator.pop(context);
+              } else {
+                // ignore: unnecessary_null_comparison
+                if (_categoryController.text.isEmpty) {
+                  Fluttertoast.showToast(msg: "Category name can't be empty");
+                }
+              }
+            }),
         // ignore: deprecated_member_use
         FlatButton(
             child: Text(
@@ -517,7 +544,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         child: TextFormField(
           controller: _brandController,
           validator: (value) {
-            if (value!.trim().isEmpty) {
+            if (value!.isEmpty) {
               return "Field can't be empty";
             }
           },
@@ -526,13 +553,20 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       ),
       actions: [
         // ignore: deprecated_member_use
-        FlatButton(child: Text("Add"), onPressed: () {
-            // ignore: unnecessary_null_comparison
-          if (_brandController.text != null) {
-            _addBrandService.createBrand(_brandController.text);
-          } Fluttertoast.showToast(msg: "Succesfully created ${_brandController.text} brand");
-          Navigator.pop(context);
-        }),
+        FlatButton(
+            child: Text("Add"),
+            onPressed: () {
+              // ignore: unnecessary_null_comparison
+              if (_brandController.text.isNotEmpty) {
+                _addBrandService.createBrand(_brandController.text);
+                Fluttertoast.showToast(
+                    msg: "Succesfully created ${_brandController.text} brand");
+                _brandController.text = '';
+                Navigator.pop(context);
+              } else if (_brandController.text.isEmpty) {
+                Fluttertoast.showToast(msg: "Brand name can't be empty");
+              }
+            }),
         // ignore: deprecated_member_use
         FlatButton(
             child: Text(

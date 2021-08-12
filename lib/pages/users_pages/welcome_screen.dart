@@ -1,6 +1,6 @@
 import 'package:ecommerce_app/home_page.dart';
-import 'package:ecommerce_app/pages/create_account_screen.dart';
-import 'package:ecommerce_app/pages/login_screen.dart';
+import 'package:ecommerce_app/pages/users_pages/create_account_screen.dart';
+import 'package:ecommerce_app/pages/users_pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';

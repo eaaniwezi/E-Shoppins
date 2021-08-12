@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/home_page.dart';
-import 'package:ecommerce_app/pages/admin_home_screen.dart';
-import 'package:ecommerce_app/pages/welcome_screen.dart';
+import 'package:ecommerce_app/pages/admin_pages/admin_add_product_screen.dart';
+import 'package:ecommerce_app/pages/admin_pages/admin_home_screen.dart';
+import 'package:ecommerce_app/pages/users_pages/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +35,8 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 // primarySwatch: Colors.red,
               ),
-              home:  AdminHomeScreen(),
+              home: AdminAddProductScreen(),
+              // home:  AdminHomeScreen(),
               // home: WelcomeScreen(),
               // home: HomePage(),
             );
