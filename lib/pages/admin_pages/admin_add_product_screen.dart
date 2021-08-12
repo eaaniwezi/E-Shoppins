@@ -1,8 +1,10 @@
 import '../../database/brand.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../database/category.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class AdminAddProductScreen extends StatefulWidget {
   const AdminAddProductScreen({Key? key}) : super(key: key);
@@ -16,11 +18,11 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
   TextEditingController _productNameController = TextEditingController();
   List<DocumentSnapshot> brands = <DocumentSnapshot>[];
   List<DocumentSnapshot> categories = <DocumentSnapshot>[];
+  CategoryService _categoryService = CategoryService();
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
-    
   }
 
   @override
@@ -35,31 +37,57 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
           child: ListView(
             children: [
               _imageContainer(),
-              TextFormField(
-                style: TextStyle(color: Style.Colors.whiteColor),
-                controller: _productNameController,
-                decoration: InputDecoration(
-                    labelText: "Product name",
-                    labelStyle:
-                        TextStyle(color: Style.Colors.whiteColor, fontSize: 12),
-                    hintText:
-                        "Product name should\'nt be more than 10 characters",
-                    hintStyle: TextStyle(
-                      color: Style.Colors.secondColor,
-                      fontSize: 12,
-                    )),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'product name cant be empty';
-                  } else if (value.length > 10) {
-                    return 'product name cant be more than 10 characters';
-                  }
+              _productNameContainer(),
+              TypeAheadField(
+                textFieldConfiguration: TextFieldConfiguration(
+                    autofocus: false,
+                    style: DefaultTextStyle.of(context)
+                        .style
+                        .copyWith(fontStyle: FontStyle.italic),
+                    decoration: InputDecoration(border: OutlineInputBorder())),
+                suggestionsCallback: (pattern) async {
+                  return await _categoryService.getSuggestions(pattern);
+                  
                 },
+                itemBuilder: (context, suggestion) {
+                  return ListTile(
+                    leading: Icon(Icons.help),
+                    title: Text(suggestion),
+                  );
+                },
+                onSuggestionSelected: (suggestion) {
+                  //   Navigator.of(context).push(MaterialPageRoute(
+                  //       builder: (context) => ProductPage(product: suggestion)));
+                  },
+           
               )
+              // AutoSearchInput(data: _categoryService.getSuggestions(suggestion), maxElementsToDisplay: maxElementsToDisplay, onItemTap: onItemTap)
             ],
           ),
         ),
       ),
+    );
+  }
+
+  _productNameContainer() {
+    return TextFormField(
+      style: TextStyle(color: Style.Colors.whiteColor),
+      controller: _productNameController,
+      decoration: InputDecoration(
+          labelText: "Product name",
+          labelStyle: TextStyle(color: Style.Colors.whiteColor, fontSize: 12),
+          hintText: "Product name should\'nt be more than 10 characters",
+          hintStyle: TextStyle(
+            color: Style.Colors.secondColor,
+            fontSize: 12,
+          )),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'product name cant be empty';
+        } else if (value.length > 10) {
+          return 'product name cant be more than 10 characters';
+        }
+      },
     );
   }
 
