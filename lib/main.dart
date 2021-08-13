@@ -35,9 +35,9 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 // primarySwatch: Colors.red,
               ),
-              home: AdminAddProductScreen(),
+              // home: AdminAddProductScreen(),
               // home:  AdminHomeScreen(),
-              // home: WelcomeScreen(),
+              home: WelcomeScreen(),
               // home: HomePage(),
             );
           }

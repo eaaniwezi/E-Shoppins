@@ -32,6 +32,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     super.initState();
     isSignedIn();
+    // handleSignInSecretly();
   }
 
   void isSignedIn() async {
@@ -40,6 +41,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
     preferences = await SharedPreferences.getInstance();
     isLogedin = await googleSignIn.isSignedIn();
+    googleSignIn.signInSilently(suppressErrors: false);
     if (isLogedin == true) {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomePage()));
@@ -63,7 +65,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
     await firebaseAuth.signInWithCredential(credential);
     // ignore: await_only_futures
-    user = await firebaseAuth.currentUser!;
+    // user = await firebaseAuth.currentUser!;
 
     // ignore: unnecessary_null_comparison
     if (user != null) {

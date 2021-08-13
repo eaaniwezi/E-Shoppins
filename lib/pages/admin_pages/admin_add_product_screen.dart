@@ -60,7 +60,7 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
                   return ListTile(
                     leading: Icon(Icons.help),
                     // ignore: unnecessary_brace_in_string_interps
-                    title: Text(suggestion![category].toString()),
+                    // title: Text(suggestion![category].toString()),
                   );
                 },
                 onSuggestionSelected: (suggestion) {
