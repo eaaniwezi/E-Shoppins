@@ -1,9 +1,8 @@
-import 'package:ecommerce_app/home_page.dart';
-import 'package:ecommerce_app/pages/admin_pages/admin_add_product_screen.dart';
-import 'package:ecommerce_app/pages/admin_pages/admin_home_screen.dart';
-import 'package:ecommerce_app/pages/users_pages/welcome_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:ecommerce_app/pages/users_pages/welcome_screen.dart';
+
+import 'pages/admin_pages/admin_add_product_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,11 +32,11 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'E-Shoppins',
               theme: ThemeData(
-                // primarySwatch: Colors.red,
-              ),
-              // home: AdminAddProductScreen(),
+                  // primarySwatch: Colors.red,
+                  ),
+              home: AdminAddProductScreen(),
               // home:  AdminHomeScreen(),
-              home: WelcomeScreen(),
+              // home: WelcomeScreen(),
               // home: HomePage(),
             );
           }

@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:ecommerce_app/home_page.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ecommerce_app/style/theme.dart' as Style;
 import 'package:ecommerce_app/pages/admin_pages/admin_home_screen.dart';
 import 'package:ecommerce_app/pages/users_pages/create_account_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:ecommerce_app/style/theme.dart' as Style;
-import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_app/home_page.dart';
-import 'package:ecommerce_app/pages/users_pages/login_screen.dart';
-import 'package:ecommerce_app/database/users.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:ecommerce_app/style/theme.dart' as Style;
+import 'package:flutter/foundation.dart';
+import 'package:ecommerce_app/home_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ecommerce_app/database/users.dart';
+import 'package:ecommerce_app/style/theme.dart' as Style;
+
+import 'package:ecommerce_app/pages/users_pages/login_screen.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({Key? key}) : super(key: key);
@@ -371,7 +371,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       } else {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomePage()));
-          Fluttertoast.showToast(msg: "Thanks for choosing us  ${_usernameController.text}");
+        Fluttertoast.showToast(
+            msg: "Thanks for choosing us  ${_usernameController.text}");
       }
 
       // Navigator.pop(context);

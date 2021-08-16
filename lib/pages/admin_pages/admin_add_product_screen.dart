@@ -1,17 +1,8 @@
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import 'dart:convert';
-import '../../database/brand.dart';
-
-import '../../database/category.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:ecommerce_app/style/theme.dart' as Style;
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class AdminAddProductScreen extends StatefulWidget {
   const AdminAddProductScreen({Key? key}) : super(key: key);
@@ -23,28 +14,23 @@ class AdminAddProductScreen extends StatefulWidget {
 class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
   GlobalKey<FormState> _formKey = GlobalKey();
   TextEditingController _productNameController = TextEditingController();
+  TextEditingController _productQuatityController = TextEditingController();
   List<DocumentSnapshot> brands = <DocumentSnapshot>[];
   List<DocumentSnapshot> categories = <DocumentSnapshot>[];
 
-  int _selectedCategoryIndex = 0;
+  List<String> selectedSizes = <String>[];
 
+  int _selectedCategoryIndex = 0;
   _onSelectedCategory(int index) {
     setState(() => _selectedCategoryIndex = index);
   }
 
-
   int _selectedBrandIndex = 0;
-
   _onSelectedBrand(int index) {
     setState(() => _selectedBrandIndex = index);
   }
 
-  String ref = 'categories';
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +50,14 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
                   SizedBox(height: 5),
                   _getCategories(),
                   SizedBox(height: 5),
-                   _getBrands(),
+                  _getBrands(),
+                  SizedBox(height: 5),
+                  _productQuantityContainer(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Available Sizes'),
+                  ),
+                  _productSizeContainer(),
                 ],
               ),
             ),
@@ -72,6 +65,150 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
         ),
       ),
     );
+  }
+
+  _productSizeContainer() {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Checkbox(
+              value: selectedSizes.contains('XS'),
+              onChanged: (value) => changeSelectedSize('XS')),
+          Text('XS'),
+          Checkbox(
+              value: selectedSizes.contains('S'),
+              onChanged: (value) => changeSelectedSize('S')),
+          Text('S'),
+          Checkbox(
+              value: selectedSizes.contains('M'),
+              onChanged: (value) => changeSelectedSize('M')),
+          Text('M'),
+          Checkbox(
+              value: selectedSizes.contains('L'),
+              onChanged: (value) => changeSelectedSize('L')),
+          Text('L'),
+          Checkbox(
+              value: selectedSizes.contains('XL'),
+              onChanged: (value) => changeSelectedSize('XL')),
+          Text('XL'),
+          // Checkbox(
+          //     value: selectedSizes.contains('XXL'),
+          //     onChanged: (value) => changeSelectedSize('XXL')),
+          // Text('XXL'),
+        ],
+      ),
+    );
+  }
+
+    void changeSelectedSize(String size) {
+    if (selectedSizes.contains(size)) {
+      setState(() {
+        selectedSizes.remove(size);
+      });
+    } else {
+      setState(() {
+        selectedSizes.insert(0, size);
+      });
+    }
+  }
+
+  _productQuantityContainer() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+        style: TextStyle(color: Style.Colors.mainColor),
+        keyboardType: TextInputType.number,
+        controller: _productQuatityController,
+        decoration: InputDecoration(
+          labelText: "Product Quantity",
+          labelStyle: TextStyle(color: Style.Colors.mainColor, fontSize: 15),
+        ),
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'product Quantity cant be empty';
+          }
+        },
+      ),
+    );
+  }
+
+  _getBrands() {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection("brands").snapshots(),
+        builder: (context, snapshot) {
+          return (snapshot.connectionState == ConnectionState.waiting)
+              ? Center(child: CircularProgressIndicator())
+              : ExpandablePanel(
+                  header: _expandedBrandsHeader(),
+                  expanded: Container(),
+                  collapsed: snapshot.data!.docs.length > 0
+                      ? SizedBox(
+                          height: 200,
+                          child: ListView.builder(
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              DocumentSnapshot data =
+                                  snapshot.data!.docs[index];
+                              return Card(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      data['brand'],
+                                      style: TextStyle(
+                                        // ignore: unnecessary_null_comparison
+                                        color: _selectedBrandIndex != null &&
+                                                _selectedBrandIndex == index
+                                            ? Style.Colors.greenColor
+                                            : Style.Colors.secondColor,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    IconButton(
+                                      onPressed: () {
+                                        if (_productNameController
+                                            .text.isEmpty) {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  "Product name cant be empty");
+                                        } else if (_productNameController
+                                            .text.isNotEmpty) {
+                                          print(data['brand']);
+                                          _onSelectedBrand(index);
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  "     Successfully choosen\n${_productNameController.text} for ${data['brand']} brand");
+                                        }
+                                      },
+                                      // ignore: unnecessary_null_comparison
+                                      icon: _selectedBrandIndex != null &&
+                                              _selectedBrandIndex == index
+                                          ? Icon(Icons.done)
+                                          : Icon(Icons.add),
+                                      // ignore: unnecessary_null_comparison
+                                      color: _selectedBrandIndex != null &&
+                                              _selectedBrandIndex == index
+                                          ? Style.Colors.greenColor
+                                          : Style.Colors.titleColor,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : Container(
+                          child: Center(
+                            child: Text(
+                              "No brand yet!! Need to create new brand",
+                              style: TextStyle(
+                                color: Style.Colors.redColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                );
+        });
   }
 
   _productNameContainer() {
@@ -206,70 +343,6 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
     );
   }
 
-  _getBrands() {
-    return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection("brands").snapshots(),
-        builder: (context, snapshot) {
-          return (snapshot.connectionState == ConnectionState.waiting)
-              ? Center(child: CircularProgressIndicator())
-              : ExpandablePanel(
-                  header: _expandedHeader(),
-                  expanded: Container(),
-                  collapsed: SizedBox(
-                    height: 200,
-                    child: ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        DocumentSnapshot data = snapshot.data!.docs[index];
-                        return Card(
-                          child: Row(
-                            children: [
-                              Text(
-                                data['brand'],
-                                style: TextStyle(
-                                  // ignore: unnecessary_null_comparison
-                                  color: _selectedBrandIndex != null &&
-                                          _selectedBrandIndex == index
-                                      ? Style.Colors.greenColor
-                                      : Style.Colors.secondColor,
-                                ),
-                              ),
-                              Spacer(),
-                              IconButton(
-                                onPressed: () {
-                                  if (_productNameController.text.isEmpty) {
-                                    Fluttertoast.showToast(
-                                        msg: "Product name cant be empty");
-                                  } else if (_productNameController
-                                      .text.isNotEmpty) {
-                                    print(data['brand']);
-                                    _onSelectedBrand(index);
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "     Successfully choosen\n${_productNameController.text} for ${data['brand']} brand");
-                                  }
-                                },
-                                // ignore: unnecessary_null_comparison
-                                icon: _selectedBrandIndex != 0 &&
-                                        _selectedBrandIndex == index
-                                    ? Icon(Icons.done)
-                                    : Icon(Icons.add),
-                                // ignore: unnecessary_null_comparison
-                                color: _selectedBrandIndex != 0 &&
-                                        _selectedBrandIndex == index
-                                    ? Style.Colors.greenColor
-                                    : Style.Colors.titleColor,
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                );
-        });
-  }
-
   _getCategories() {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection("categories").snapshots(),
@@ -279,59 +352,88 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
               : ExpandablePanel(
                   header: _expandedHeader(),
                   expanded: Container(),
-                  collapsed: SizedBox(
-                    height: 200,
-                    child: ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        DocumentSnapshot data = snapshot.data!.docs[index];
-                        return Card(
-                          child: Row(
-                            children: [
-                              Text(
-                                data['category'],
-                                style: TextStyle(
-                                  // ignore: unnecessary_null_comparison
-                                  color: _selectedCategoryIndex != null &&
-                                          _selectedCategoryIndex == index
-                                      ? Style.Colors.greenColor
-                                      : Style.Colors.secondColor,
+                  collapsed: snapshot.data!.docs.length > 0
+                      ? SizedBox(
+                          height: 200,
+                          child: ListView.builder(
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              DocumentSnapshot data =
+                                  snapshot.data!.docs[index];
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        data['category'],
+                                        style: TextStyle(
+                                          // ignore: unnecessary_null_comparison
+                                          color:
+                                              _selectedCategoryIndex != null &&
+                                                      _selectedCategoryIndex ==
+                                                          index
+                                                  ? Style.Colors.greenColor
+                                                  : Style.Colors.secondColor,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      IconButton(
+                                        onPressed: () {
+                                          if (_productNameController
+                                              .text.isEmpty) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    "Product name cant be empty");
+                                          } else if (_productNameController
+                                              .text.isNotEmpty) {
+                                            print(data['category']);
+                                            _onSelectedCategory(index);
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    "     Successfully choosen\n${_productNameController.text} for ${data['category']} category");
+                                          }
+                                        },
+                                        // ignore: unnecessary_null_comparison
+                                        icon: _selectedCategoryIndex != null &&
+                                                _selectedCategoryIndex == index
+                                            ? Icon(Icons.done)
+                                            : Icon(Icons.add),
+                                        // ignore: unnecessary_null_comparison
+                                        color: _selectedCategoryIndex != null &&
+                                                _selectedCategoryIndex == index
+                                            ? Style.Colors.greenColor
+                                            : Style.Colors.titleColor,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Spacer(),
-                              IconButton(
-                                onPressed: () {
-                                  if (_productNameController.text.isEmpty) {
-                                    Fluttertoast.showToast(
-                                        msg: "Product name cant be empty");
-                                  } else if (_productNameController
-                                      .text.isNotEmpty) {
-                                    print(data['category']);
-                                    _onSelectedCategory(index);
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "     Successfully choosen\n${_productNameController.text} for ${data['category']} category");
-                                  }
-                                },
-                                // ignore: unnecessary_null_comparison
-                                icon: _selectedCategoryIndex != null &&
-                                        _selectedCategoryIndex == index
-                                    ? Icon(Icons.done)
-                                    : Icon(Icons.add),
-                                // ignore: unnecessary_null_comparison
-                                color: _selectedCategoryIndex != null &&
-                                        _selectedCategoryIndex == index
-                                    ? Style.Colors.greenColor
-                                    : Style.Colors.titleColor,
-                              ),
-                            ],
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  ),
+                        )
+                      : Container(
+                          child: Center(
+                            child: Text(
+                              "No category yet!! Need to create new category",
+                              style: TextStyle(
+                                color: Style.Colors.redColor,
+                              ),
+                            ),
+                          ),
+                        ),
                 );
         });
+  }
+
+  _expandedBrandsHeader() {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Text(
+        "Choose a brand",
+        style: TextStyle(color: Style.Colors.mainColor, fontSize: 15),
+      ),
+    );
   }
 
   _expandedHeader() {
