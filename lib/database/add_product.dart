@@ -5,7 +5,7 @@ class ProductService {
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   String ref = 'products';
 
-  void uploadProduct({required String productName, brand, category, required int quantity,  List? sizes, images, required double prices}) {
+  void uploadProduct({required String productName, brand, category, required int quantity,  required List sizes, images, required double price}) {
     var id = Uuid();
     String productId = id.v1();
 
@@ -13,7 +13,11 @@ class ProductService {
       'name' : productName,
       'id': productId,
       'brand': brand,
-      'category': category
+      'category': category,
+      'quantity': quantity,
+      'sizes': sizes,
+      'images': images,
+      'price' : price
     });
   }
 }

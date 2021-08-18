@@ -38,6 +38,8 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
     setState(() => _selectedBrandIndex = index);
   }
 
+  bool isLoading = false;
+
   var _image1;
   var _image2;
   var _image3;
@@ -98,7 +100,7 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
   _addProduct() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: GestureDetector(
+      child: isLoading ? CircularProgressIndicator() : GestureDetector(
         onTap: () {
           uploadToDb();
         },
@@ -343,47 +345,50 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
                               DocumentSnapshot data =
                                   snapshot.data!.docs[index];
                               return Card(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      data['brand'],
-                                      style: TextStyle(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        data['brand'],
+                                        style: TextStyle(
+                                          // ignore: unnecessary_null_comparison
+                                          color: _selectedBrandIndex != null &&
+                                                  _selectedBrandIndex == index
+                                              ? Style.Colors.greenColor
+                                              : Style.Colors.secondColor,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      IconButton(
+                                        onPressed: () {
+                                          if (_productNameController
+                                              .text.isEmpty) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    "Product name cant be empty");
+                                          } else if (_productNameController
+                                              .text.isNotEmpty) {
+                                            print(data['brand']);
+                                            _onSelectedBrand(index);
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    "     Successfully choosen\n${_productNameController.text} for ${data['brand']} brand");
+                                          }
+                                        },
+                                        // ignore: unnecessary_null_comparison
+                                        icon: _selectedBrandIndex != null &&
+                                                _selectedBrandIndex == index
+                                            ? Icon(Icons.done)
+                                            : Icon(Icons.add),
                                         // ignore: unnecessary_null_comparison
                                         color: _selectedBrandIndex != null &&
                                                 _selectedBrandIndex == index
                                             ? Style.Colors.greenColor
-                                            : Style.Colors.secondColor,
+                                            : Style.Colors.titleColor,
                                       ),
-                                    ),
-                                    Spacer(),
-                                    IconButton(
-                                      onPressed: () {
-                                        if (_productNameController
-                                            .text.isEmpty) {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "Product name cant be empty");
-                                        } else if (_productNameController
-                                            .text.isNotEmpty) {
-                                          print(data['brand']);
-                                          _onSelectedBrand(index);
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "     Successfully choosen\n${_productNameController.text} for ${data['brand']} brand");
-                                        }
-                                      },
-                                      // ignore: unnecessary_null_comparison
-                                      icon: _selectedBrandIndex != null &&
-                                              _selectedBrandIndex == index
-                                          ? Icon(Icons.done)
-                                          : Icon(Icons.add),
-                                      // ignore: unnecessary_null_comparison
-                                      color: _selectedBrandIndex != null &&
-                                              _selectedBrandIndex == index
-                                          ? Style.Colors.greenColor
-                                          : Style.Colors.titleColor,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               );
                             },
@@ -594,49 +599,52 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Card(
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        data['category'],
-                                        style: TextStyle(
-                                          color:
-                                              // ignore: unnecessary_null_comparison
-                                              _selectedCategoryIndex != null &&
-                                                      _selectedCategoryIndex ==
-                                                          index
-                                                  ? Style.Colors.greenColor
-                                                  : Style.Colors.secondColor,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          data['category'],
+                                          style: TextStyle(
+                                            color:
+                                                // ignore: unnecessary_null_comparison
+                                                _selectedCategoryIndex != null &&
+                                                        _selectedCategoryIndex ==
+                                                            index
+                                                    ? Style.Colors.greenColor
+                                                    : Style.Colors.secondColor,
+                                          ),
                                         ),
-                                      ),
-                                      Spacer(),
-                                      IconButton(
-                                        onPressed: () {
-                                          if (_productNameController
-                                              .text.isEmpty) {
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    "Product name cant be empty");
-                                          } else if (_productNameController
-                                              .text.isNotEmpty) {
-                                            print(data['category']);
-                                            _onSelectedCategory(index);
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    "     Successfully choosen\n${_productNameController.text} for ${data['category']} category");
-                                          }
-                                        },
-                                        // ignore: unnecessary_null_comparison
-                                        icon: _selectedCategoryIndex != null &&
-                                                _selectedCategoryIndex == index
-                                            ? Icon(Icons.done)
-                                            : Icon(Icons.add),
-                                        // ignore: unnecessary_null_comparison
-                                        color: _selectedCategoryIndex != null &&
-                                                _selectedCategoryIndex == index
-                                            ? Style.Colors.greenColor
-                                            : Style.Colors.titleColor,
-                                      ),
-                                    ],
+                                        Spacer(),
+                                        IconButton(
+                                          onPressed: () {
+                                            if (_productNameController
+                                                .text.isEmpty) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      "Product name cant be empty");
+                                            } else if (_productNameController
+                                                .text.isNotEmpty) {
+                                              print(data['category']);
+                                              _onSelectedCategory(index);
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      "     Successfully choosen\n${_productNameController.text} for ${data['category']} category");
+                                            }
+                                          },
+                                          // ignore: unnecessary_null_comparison
+                                          icon: _selectedCategoryIndex != null &&
+                                                  _selectedCategoryIndex == index
+                                              ? Icon(Icons.done)
+                                              : Icon(Icons.add),
+                                          // ignore: unnecessary_null_comparison
+                                          color: _selectedCategoryIndex != null &&
+                                                  _selectedCategoryIndex == index
+                                              ? Style.Colors.greenColor
+                                              : Style.Colors.titleColor,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
@@ -679,6 +687,9 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
 
   void uploadToDb() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
       if (_image1 != null && _image2 != null && _image3 != null) {
         if (selectedSizes.isNotEmpty) {
           String imageUrl1;
@@ -694,58 +705,97 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
           final String picture3 =
               "3${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
           //  StorageUploadTask uploadTask1 = firebaseStorage.ref().child(picture1).putFile(_image1);
-          Reference ref1 = firebaseStorage.ref().child(picture1);
-          UploadTask uploadTask1 = ref1.putFile(_image1);
 
-          Reference ref2 = firebaseStorage.ref().child(picture2);
-          UploadTask uploadTask2 = ref2.putFile(_image2);
+          TaskSnapshot snapshot1 =
+              await firebaseStorage.ref().child(picture1).putFile(_image1);
+          TaskSnapshot snapshot2 =
+              await firebaseStorage.ref().child(picture2).putFile(_image2);
+          TaskSnapshot snapshot3 =
+              await firebaseStorage.ref().child(picture3).putFile(_image3);
 
-          Reference ref3 = firebaseStorage.ref().child(picture3);
-          UploadTask uploadTask3 = ref3.putFile(_image3);
-          
-          // TaskSnapshot snapshot1 = await uploadTask1.whenComplete(() => snaps)
+          if ((snapshot1.state == TaskState.success) &&
+              (snapshot2.state == TaskState.success) &&
+              ((snapshot3.state == TaskState.success))) {
+            imageUrl1 = await snapshot1.ref.getDownloadURL();
+            imageUrl2 = await snapshot2.ref.getDownloadURL();
+            imageUrl3 = await snapshot3.ref.getDownloadURL();
 
-          uploadTask1.whenComplete(() {
-            imageUrl1 = ref1.getDownloadURL().toString();
-          }).catchError((e) {
-            print(e);
-            Fluttertoast.showToast(msg: e.toString());
-          });
-   
+            List<String> imageList = [imageUrl1, imageUrl2, imageUrl3];
+            print(imageList);
 
-          uploadTask2.whenComplete(() {
-            imageUrl2 = ref2.getDownloadURL() as String;
-          }).catchError((e) {
-            print(e);
-            Fluttertoast.showToast(msg: e.toString());
-          });
+            _productService.uploadProduct(
+              productName: _productNameController.text,
+              price: double.parse(_productPriceController.text),
+              quantity: int.parse(_productQuatityController.text),
+              images: imageList,
+              sizes: [],
+            );
+            setState(() {
+              isLoading = false;
+            });
+            Fluttertoast.showToast(
+                msg: "Successfully added products to database");
+                Navigator.pop(context);
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+            print(
+                "Error from image ${snapshot1.state.toString() + snapshot2.state.toString() + snapshot3.state.toString()}");
+            Fluttertoast.showToast(
+                msg:
+                    "Error from image ${snapshot1.state.toString() + snapshot2.state.toString() + snapshot3.state.toString()}");
+          }
 
-          uploadTask3.whenComplete(() {
-            imageUrl3 = ref1.getDownloadURL() as String;
-          }).catchError((e) {
-            print(e);
-            Fluttertoast.showToast(msg: e.toString());
-          });
+          // Reference ref1 = firebaseStorage.ref().child(picture1);
+          // UploadTask uploadTask1 = ref1.putFile(_image1);
 
-          
-          List<String> imageList = [_image1.toString(), _image2.toString(), _image3.toString()];
+          // Reference ref2 = firebaseStorage.ref().child(picture2);
+          // UploadTask uploadTask2 = ref2.putFile(_image2);
 
-          _productService.uploadProduct(
-            productName: _productNameController.text,
-            prices: double.parse(_productPriceController.text),
-            quantity: int.parse(_productQuatityController.text),
-           images: imageList,
-          );
-           Fluttertoast.showToast(
-              msg: "Successful added to database");
+          // Reference ref3 = firebaseStorage.ref().child(picture3);
+          // UploadTask uploadTask3 = ref3.putFile(_image3);
+
+          // // TaskSnapshot snapshot1 = await uploadTask1.whenComplete(() => snaps)
+
+          // uploadTask1.whenComplete(() {
+          //   imageUrl1 = ref1.getDownloadURL().toString();
+          // }).catchError((e) {
+          //   print(e);
+          //   Fluttertoast.showToast(msg: e.toString());
+          // });
+
+          // uploadTask2.whenComplete(() {
+          //   imageUrl2 = ref2.getDownloadURL() as String;
+          // }).catchError((e) {
+          //   print(e);
+          //   Fluttertoast.showToast(msg: e.toString());
+          // });
+
+          // uploadTask3.whenComplete(() {
+          //   imageUrl3 = ref1.getDownloadURL() as String;
+          // }).catchError((e) {
+          //   print(e);
+          //   Fluttertoast.showToast(msg: e.toString());
+          // });
+
+          // List<String> imageList = [_image1.toString(), _image2.toString(), _image3.toString()];
+
+          // Fluttertoast.showToast(msg: "Successful added to database");
         } else {
+          setState(() {
+            isLoading = false;
+          });
           Fluttertoast.showToast(
               msg: "At least one size should be f*cking selected");
         }
       } else {
+        setState(() {
+          isLoading = false;
+        });
         Fluttertoast.showToast(
             msg: "All three images must be f*cking provided!!");
       }
-    } 
+    }
   }
 }
