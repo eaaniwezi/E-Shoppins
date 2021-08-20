@@ -1,7 +1,6 @@
-import 'dart:async';
-import 'dart:io' as io;
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../database/add_product.dart';
 import 'package:expandable/expandable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
+import '../../providers/admin_providers/products_providers.dart';
 
 class AdminAddProductScreen extends StatefulWidget {
   const AdminAddProductScreen({Key? key}) : super(key: key);
@@ -17,16 +17,19 @@ class AdminAddProductScreen extends StatefulWidget {
   _AdminAddProductScreenState createState() => _AdminAddProductScreenState();
 }
 
-class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
+class _AdminAddProductScreenState extends State<AdminAddProductScreen>
+    with AutomaticKeepAliveClientMixin {
   GlobalKey<FormState> _formKey = GlobalKey();
+  final _scaffoldKey = new GlobalKey<ScaffoldState>();
   ProductService _productService = ProductService();
   TextEditingController _productNameController = TextEditingController();
   TextEditingController _productQuatityController = TextEditingController();
   TextEditingController _productPriceController = TextEditingController();
   List<DocumentSnapshot> brands = <DocumentSnapshot>[];
   List<DocumentSnapshot> categories = <DocumentSnapshot>[];
-
   List<String> selectedSizes = <String>[];
+  String? _currentCategory;
+  String? _currentBrand;
 
   int _selectedCategoryIndex = 0;
   _onSelectedCategory(int index) {
@@ -39,14 +42,20 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
   }
 
   bool isLoading = false;
-
   var _image1;
   var _image2;
   var _image3;
-
   var imagePicker1;
   var imagePicker2;
   var imagePicker3;
+
+  bool onSale = false;
+  bool featured = false;
+  Color white = Colors.white;
+  Color black = Colors.black;
+  Color grey = Colors.grey;
+  Color red = Colors.red;
+  List<String> colors = <String>[];
 
   @override
   void initState() {
@@ -56,71 +65,347 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
     imagePicker3 = new ImagePicker();
   }
 
-  // ImagePicker picker = ImagePicker();
-
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Style.Colors.whiteColor,
       appBar: _appBar(),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            child: Container(
+      body: isLoading
+          ? Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _imageContainer(),
-                  _productNameContainer(),
-                  SizedBox(height: 5),
-                  _getCategories(),
-                  SizedBox(height: 5),
-                  _getBrands(),
-                  SizedBox(height: 5),
-                  _productQuantityContainer(),
-                  SizedBox(height: 5),
-                  _productPriceContainer(),
+                  CircularProgressIndicator(
+                    color: Style.Colors.greenColor,
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Available Sizes'),
+                    child: Text(
+                      "Sending data to the database!!",
+                      style: TextStyle(
+                          color: Style.Colors.greenColor, fontSize: 15),
+                    ),
                   ),
-                  _productSizeContainer(),
-                  SizedBox(height: 5),
-                  _addProduct(),
+                  Text(
+                    "Wait for a few seconds....",
+                    style:
+                        TextStyle(color: Style.Colors.greenColor, fontSize: 15),
+                  ),
                 ],
               ),
+            )
+          : Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  child: Container(
+                    child: Column(
+                      children: [
+                        _imageContainer(),
+                        _productNameContainer(),
+                        SizedBox(height: 5),
+                        _getCategories(),
+                        SizedBox(height: 5),
+                        _getBrands(),
+                        SizedBox(height: 5),
+                        _productQuantityContainer(),
+                        SizedBox(height: 5),
+                        _productPriceContainer(),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Available Colors'),
+                        ),
+                        _colorContainer(),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Available Sizes'),
+                        ),
+                        _productSizeContainer(),
+                        SizedBox(height: 5),
+                        _optional(),
+                        SizedBox(height: 5),
+                        _addProduct(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
+    );
+  }
+
+  _optional() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Text('Sale'),
+            SizedBox(
+              width: 10,
+            ),
+            Switch(
+                activeColor: Style.Colors.greenColor,
+                value: onSale,
+                onChanged: (value) {
+                  setState(() {
+                    onSale = value;
+                  });
+                }),
+          ],
         ),
-      ),
+        Row(
+          children: <Widget>[
+            Text('Featured'),
+            SizedBox(
+              width: 10,
+            ),
+            Switch(
+                activeColor: Style.Colors.greenColor,
+                value: featured,
+                onChanged: (value) {
+                  setState(() {
+                    featured = value;
+                  });
+                }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  _colorContainer() {
+    final productProvider = Provider.of<ProductProvider>(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  if (productProvider.selectedColors.contains('red')) {
+                    productProvider.removeColor('red');
+                  } else {
+                    productProvider.addColors('red');
+                  }
+                  setState(() {
+                    colors = productProvider.selectedColors;
+                  });
+                },
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                      color: productProvider.selectedColors.contains('red')
+                          ? Colors.blue
+                          : grey,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  if (productProvider.selectedColors.contains('yellow')) {
+                    productProvider.removeColor('yellow');
+                  } else {
+                    productProvider.addColors('yellow');
+                  }
+                  setState(() {
+                    colors = productProvider.selectedColors;
+                  });
+                },
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                      color: productProvider.selectedColors.contains('yellow')
+                          ? red
+                          : grey,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.yellow,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  if (productProvider.selectedColors.contains('blue')) {
+                    productProvider.removeColor('blue');
+                  } else {
+                    productProvider.addColors('blue');
+                  }
+                  setState(() {
+                    colors = productProvider.selectedColors;
+                  });
+                },
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                      color: productProvider.selectedColors.contains('blue')
+                          ? red
+                          : grey,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  if (productProvider.selectedColors.contains('green')) {
+                    productProvider.removeColor('green');
+                  } else {
+                    productProvider.addColors('green');
+                  }
+                  setState(() {
+                    colors = productProvider.selectedColors;
+                  });
+                },
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                      color: productProvider.selectedColors.contains('green')
+                          ? red
+                          : grey,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.green,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  if (productProvider.selectedColors.contains('white')) {
+                    productProvider.removeColor('white');
+                  } else {
+                    productProvider.addColors('white');
+                  }
+                  setState(() {
+                    colors = productProvider.selectedColors;
+                  });
+                },
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                      color: productProvider.selectedColors.contains('white')
+                          ? red
+                          : grey,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: CircleAvatar(
+                      backgroundColor: white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  if (productProvider.selectedColors.contains('black')) {
+                    productProvider.removeColor('black');
+                  } else {
+                    productProvider.addColors('black');
+                  }
+                  setState(() {
+                    colors = productProvider.selectedColors;
+                  });
+                },
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                      color: productProvider.selectedColors.contains('black')
+                          ? red
+                          : grey,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: CircleAvatar(
+                      backgroundColor: black,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
   _addProduct() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: isLoading ? CircularProgressIndicator() : GestureDetector(
-        onTap: () {
-          uploadToDb();
-        },
-        child: Container(
-          height: 50,
-          width: 120,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(35),
-            color: Style.Colors.greenColor,
-          ),
-          child: Center(
-            child: Text(
-              "Add Product",
-              style: TextStyle(
-                color: Style.Colors.whiteColor,
+      child: isLoading
+          ? CircularProgressIndicator()
+          : GestureDetector(
+              onTap: () {
+                try {
+                  uploadToDb();
+                  print(_currentCategory);
+                  print(_currentBrand);
+                } catch (e) {
+                  print(e.toString());
+                  Fluttertoast.showToast(msg: e.toString());
+                }
+              },
+              child: Container(
+                height: 50,
+                width: 120,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(35),
+                  color: Style.Colors.greenColor,
+                ),
+                child: Center(
+                  child: Text(
+                    "Add Product",
+                    style: TextStyle(
+                      color: Style.Colors.whiteColor,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -370,6 +655,9 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
                                           } else if (_productNameController
                                               .text.isNotEmpty) {
                                             print(data['brand']);
+                                            setState(() {
+                                              _currentBrand = data['brand'];
+                                            });
                                             _onSelectedBrand(index);
                                             Fluttertoast.showToast(
                                                 msg:
@@ -596,6 +884,7 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
                             itemBuilder: (BuildContext context, int index) {
                               DocumentSnapshot data =
                                   snapshot.data!.docs[index];
+
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Card(
@@ -608,7 +897,8 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
                                           style: TextStyle(
                                             color:
                                                 // ignore: unnecessary_null_comparison
-                                                _selectedCategoryIndex != null &&
+                                                _selectedCategoryIndex !=
+                                                            null &&
                                                         _selectedCategoryIndex ==
                                                             index
                                                     ? Style.Colors.greenColor
@@ -617,7 +907,7 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
                                         ),
                                         Spacer(),
                                         IconButton(
-                                          onPressed: () {
+                                          onPressed: () async {
                                             if (_productNameController
                                                 .text.isEmpty) {
                                               Fluttertoast.showToast(
@@ -626,22 +916,33 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
                                             } else if (_productNameController
                                                 .text.isNotEmpty) {
                                               print(data['category']);
+                                              setState(() {
+                                                _currentCategory =
+                                                    data['category'];
+                                              });
+                                              print("object");
+                                              print(
+                                                  _currentCategory.toString());
                                               _onSelectedCategory(index);
                                               Fluttertoast.showToast(
                                                   msg:
                                                       "     Successfully choosen\n${_productNameController.text} for ${data['category']} category");
                                             }
                                           },
-                                          // ignore: unnecessary_null_comparison
-                                          icon: _selectedCategoryIndex != null &&
-                                                  _selectedCategoryIndex == index
-                                              ? Icon(Icons.done)
-                                              : Icon(Icons.add),
-                                          // ignore: unnecessary_null_comparison
-                                          color: _selectedCategoryIndex != null &&
-                                                  _selectedCategoryIndex == index
-                                              ? Style.Colors.greenColor
-                                              : Style.Colors.titleColor,
+                                          icon:
+                                              // ignore: unnecessary_null_comparison
+                                              _selectedCategoryIndex != null &&
+                                                      _selectedCategoryIndex ==
+                                                          index
+                                                  ? Icon(Icons.done)
+                                                  : Icon(Icons.add),
+                                          color:
+                                              // ignore: unnecessary_null_comparison
+                                              _selectedCategoryIndex != null &&
+                                                      _selectedCategoryIndex ==
+                                                          index
+                                                  ? Style.Colors.greenColor
+                                                  : Style.Colors.titleColor,
                                         ),
                                       ],
                                     ),
@@ -691,103 +992,87 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
         isLoading = true;
       });
       if (_image1 != null && _image2 != null && _image3 != null) {
-        if (selectedSizes.isNotEmpty) {
-          String imageUrl1;
-          String imageUrl2;
-          String imageUrl3;
+        if (_currentBrand != null) {
+          if (_currentCategory != null) {
+            if (selectedSizes.isNotEmpty) {
+              String imageUrl1;
+              String imageUrl2;
+              String imageUrl3;
 
-          final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+              final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
-          final String picture1 =
-              "1${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
-          final String picture2 =
-              "2${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
-          final String picture3 =
-              "3${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
-          //  StorageUploadTask uploadTask1 = firebaseStorage.ref().child(picture1).putFile(_image1);
+              final String picture1 =
+                  "1${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
+              final String picture2 =
+                  "2${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
+              final String picture3 =
+                  "3${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
+              //  StorageUploadTask uploadTask1 = firebaseStorage.ref().child(picture1).putFile(_image1);
 
-          TaskSnapshot snapshot1 =
-              await firebaseStorage.ref().child(picture1).putFile(_image1);
-          TaskSnapshot snapshot2 =
-              await firebaseStorage.ref().child(picture2).putFile(_image2);
-          TaskSnapshot snapshot3 =
-              await firebaseStorage.ref().child(picture3).putFile(_image3);
+              TaskSnapshot snapshot1 =
+                  await firebaseStorage.ref().child(picture1).putFile(_image1);
+              TaskSnapshot snapshot2 =
+                  await firebaseStorage.ref().child(picture2).putFile(_image2);
+              TaskSnapshot snapshot3 =
+                  await firebaseStorage.ref().child(picture3).putFile(_image3);
 
-          if ((snapshot1.state == TaskState.success) &&
-              (snapshot2.state == TaskState.success) &&
-              ((snapshot3.state == TaskState.success))) {
-            imageUrl1 = await snapshot1.ref.getDownloadURL();
-            imageUrl2 = await snapshot2.ref.getDownloadURL();
-            imageUrl3 = await snapshot3.ref.getDownloadURL();
+              if ((snapshot1.state == TaskState.success) &&
+                  (snapshot2.state == TaskState.success) &&
+                  ((snapshot3.state == TaskState.success))) {
+                imageUrl1 = await snapshot1.ref.getDownloadURL();
+                imageUrl2 = await snapshot2.ref.getDownloadURL();
+                imageUrl3 = await snapshot3.ref.getDownloadURL();
 
-            List<String> imageList = [imageUrl1, imageUrl2, imageUrl3];
-            print(imageList);
+                List<String> imageList = [imageUrl1, imageUrl2, imageUrl3];
+                print(imageList);
 
-            _productService.uploadProduct(
-              productName: _productNameController.text,
-              price: double.parse(_productPriceController.text),
-              quantity: int.parse(_productQuatityController.text),
-              images: imageList,
-              sizes: [],
-            );
-            setState(() {
-              isLoading = false;
-            });
-            Fluttertoast.showToast(
-                msg: "Successfully added products to database");
+                _productService.uploadProduct({
+                  "name": _productNameController.text,
+                  "price": double.parse(_productPriceController.text),
+                  "sizes": selectedSizes,
+                  "colors": colors,
+                  "picture": imageList,
+                  "quantity": int.parse(_productQuatityController.text),
+                  "brand": _currentBrand,
+                  "category": _currentCategory,
+                  'sale': onSale,
+                  'featured': featured
+                });
+
+                setState(() {
+                  isLoading = false;
+                });
+                Fluttertoast.showToast(
+                    msg: "Successfully added products to database");
                 Navigator.pop(context);
+              } else {
+                setState(() {
+                  isLoading = false;
+                });
+                print(
+                    "Error from image ${snapshot1.state.toString() + snapshot2.state.toString() + snapshot3.state.toString()}");
+                Fluttertoast.showToast(
+                    msg:
+                        "Error from image ${snapshot1.state.toString() + snapshot2.state.toString() + snapshot3.state.toString()}");
+              }
+            } else {
+              setState(() {
+                isLoading = false;
+              });
+              Fluttertoast.showToast(
+                  msg: "At least one size should be f*cking selected");
+            }
           } else {
             setState(() {
               isLoading = false;
             });
-            print(
-                "Error from image ${snapshot1.state.toString() + snapshot2.state.toString() + snapshot3.state.toString()}");
-            Fluttertoast.showToast(
-                msg:
-                    "Error from image ${snapshot1.state.toString() + snapshot2.state.toString() + snapshot3.state.toString()}");
+            Fluttertoast.showToast(msg: "Please select on catergory");
           }
-
-          // Reference ref1 = firebaseStorage.ref().child(picture1);
-          // UploadTask uploadTask1 = ref1.putFile(_image1);
-
-          // Reference ref2 = firebaseStorage.ref().child(picture2);
-          // UploadTask uploadTask2 = ref2.putFile(_image2);
-
-          // Reference ref3 = firebaseStorage.ref().child(picture3);
-          // UploadTask uploadTask3 = ref3.putFile(_image3);
-
-          // // TaskSnapshot snapshot1 = await uploadTask1.whenComplete(() => snaps)
-
-          // uploadTask1.whenComplete(() {
-          //   imageUrl1 = ref1.getDownloadURL().toString();
-          // }).catchError((e) {
-          //   print(e);
-          //   Fluttertoast.showToast(msg: e.toString());
-          // });
-
-          // uploadTask2.whenComplete(() {
-          //   imageUrl2 = ref2.getDownloadURL() as String;
-          // }).catchError((e) {
-          //   print(e);
-          //   Fluttertoast.showToast(msg: e.toString());
-          // });
-
-          // uploadTask3.whenComplete(() {
-          //   imageUrl3 = ref1.getDownloadURL() as String;
-          // }).catchError((e) {
-          //   print(e);
-          //   Fluttertoast.showToast(msg: e.toString());
-          // });
-
-          // List<String> imageList = [_image1.toString(), _image2.toString(), _image3.toString()];
-
-          // Fluttertoast.showToast(msg: "Successful added to database");
         } else {
           setState(() {
             isLoading = false;
           });
-          Fluttertoast.showToast(
-              msg: "At least one size should be f*cking selected");
+          Fluttertoast.showToast(msg: "Please select one brand");
         }
       } else {
         setState(() {
@@ -798,4 +1083,7 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
       }
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

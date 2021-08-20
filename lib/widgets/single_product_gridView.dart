@@ -18,7 +18,8 @@ class SingleProductGridView extends StatelessWidget {
     this.old_price,
     this.price,
     this.description,
-    this.colors, this.otherPictures,
+    this.colors,
+    this.otherPictures,
   });
 
   @override
@@ -49,18 +50,20 @@ class SingleProductGridView extends StatelessWidget {
           height: 400,
           child: Column(
             children: [
-              Container(
-                // width: double.infinity,
-                height: 150,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.0),
-                      topRight: Radius.zero,
-                      bottomLeft: Radius.zero,
-                      bottomRight: Radius.circular(20.0),
-                    ),
-                    image: DecorationImage(
-                        image: AssetImage(picture), fit: BoxFit.cover)),
+              Expanded(
+                child: Container(
+                  // width: double.infinity,
+                  height: 150,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.zero,
+                        bottomLeft: Radius.zero,
+                        bottomRight: Radius.circular(20.0),
+                      ),
+                      image: DecorationImage(
+                          image: AssetImage(picture), fit: BoxFit.cover)),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(2.4),
