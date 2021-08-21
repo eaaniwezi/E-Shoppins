@@ -21,7 +21,7 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen>
     with AutomaticKeepAliveClientMixin {
   GlobalKey<FormState> _formKey = GlobalKey();
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
-  ProductService _productService = ProductService();
+  AdminProductServices _productService = AdminProductServices();
   TextEditingController _productNameController = TextEditingController();
   TextEditingController _productQuatityController = TextEditingController();
   TextEditingController _productPriceController = TextEditingController();
@@ -1031,7 +1031,7 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen>
                   "price": double.parse(_productPriceController.text),
                   "sizes": selectedSizes,
                   "colors": colors,
-                  "picture": imageList,
+                  "pictures": imageList,
                   "quantity": int.parse(_productQuatityController.text),
                   "brand": _currentBrand,
                   "category": _currentCategory,

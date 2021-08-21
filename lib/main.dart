@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             return MultiProvider(
               providers: [
+                 ChangeNotifierProvider.value(value: UserProvider.initialize()),
                 ChangeNotifierProvider.value(value: ProductProvider()),
               ],
               child: MaterialApp(
@@ -40,9 +42,9 @@ class MyApp extends StatelessWidget {
                 theme: ThemeData(
                     // primarySwatch: Colors.red,
                     ),
-                home: AdminAddProductScreen(),
+                // home: AdminAddProductScreen(),
                 // home:  AdminHomeScreen(),
-                // home: WelcomeScreen(),
+                home: WelcomeScreen(),
                 // home: HomePage(),
               ),
             );

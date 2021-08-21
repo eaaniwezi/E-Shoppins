@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ecommerce_app/home_page.dart';
@@ -6,8 +7,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ecommerce_app/database/users.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
-
 import 'package:ecommerce_app/pages/users_pages/login_screen.dart';
+import 'package:provider/provider.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({Key? key}) : super(key: key);
@@ -35,7 +36,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   bool circular = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _globalkey = GlobalKey<FormState>();
-  UserServices _userServices = UserServices();
+  UserServicesRTDB _userServices = UserServicesRTDB();
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -181,10 +182,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Widget registerButton() {
     return GestureDetector(
       onTap: () async {
-        // setState(() {
-        //   circular = true;
-        // });
         try {
+          setState(() {
+            circular = true;
+          });
           registerUser();
         } catch (e) {
           print(e);
@@ -200,7 +201,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           elevation: 7.0,
           child: Center(
             child: circular
-                ? CircularProgressIndicator()
+                ? CircularProgressIndicator(color: Colors.green)
                 : Text(
                     'REGISTER',
                     style: TextStyle(
@@ -342,41 +343,49 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   }
 
   Future registerUser() async {
+    final user = Provider.of<UserProvider>(context, listen: false);
     FormState? formState = _globalkey.currentState;
 
     if (formState!.validate()) {
       formState.reset();
       print("user in");
       // ignore: await_only_futures
-      User? user = await firebaseAuth.currentUser;
-      // ignore: unnecessary_null_comparison
-      if (user == null) {
-        firebaseAuth
-            .createUserWithEmailAndPassword(
-                email: _emailController.text,
-                password: _passwordController.text)
-            .then((user) => {
-                  _userServices.createUser({
-                    "userId": user.user!.uid,
-                    "username": _usernameController.text,
-                    "email": _emailController.text,
-                  })
-                })
-            .catchError((err) => {
-                  print(err.toString()),
-                  Fluttertoast.showToast(msg: err.toString()),
-                });
-        print("userCreated");
-        // ignore: unnecessary_null_comparison
-      } else {
-        Navigator.pushReplacement(
+      // User? user = await firebaseAuth.currentUser;
+      // // ignore: unnecessary_null_comparison
+      // if (user == null) {
+      //   firebaseAuth
+      //       .createUserWithEmailAndPassword(
+      //           email: _emailController.text,
+      //           password: _passwordController.text)
+      //       .then((user) => {
+      //             _userServices.createUser({
+      //               "userId": user.user!.uid,
+      //               "username": _usernameController.text,
+      //               "email": _emailController.text,
+      //             })
+      //           })
+      //       .catchError((err) => {
+      //             print(err.toString()),
+      //             Fluttertoast.showToast(msg: err.toString()),
+      //           });
+      //   print("userCreated");
+      //   // ignore: unnecessary_null_comparison
+      // } else {
+      //   Navigator.pushReplacement(
+      //       context, MaterialPageRoute(builder: (context) => HomePage()));
+      //   Fluttertoast.showToast(
+      //       msg: "Thanks for choosing us  ${_usernameController.text}");
+      // }
+
+      // // Navigator.pop(context);
+      // // return Fluttertoast.showToast(msg: "Failed in creating an account");
+      if (!await user.signUp(_usernameController.text, _emailController.text,
+          _passwordController2.text)) {
+        Fluttertoast.showToast(msg: "Failed to create an account!!");
+      }       Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomePage()));
         Fluttertoast.showToast(
             msg: "Thanks for choosing us  ${_usernameController.text}");
-      }
-
-      // Navigator.pop(context);
-      // return Fluttertoast.showToast(msg: "Failed in creating an account");
     } else {
       setState(() {
         circular = false;

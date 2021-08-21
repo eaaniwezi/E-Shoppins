@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 
-class ProductService {
+class AdminProductServices {
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   String ref = 'products';
 
