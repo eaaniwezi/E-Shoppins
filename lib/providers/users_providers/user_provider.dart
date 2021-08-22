@@ -23,15 +23,18 @@ class UserProvider with ChangeNotifier {
     _firebaseAuth!.authStateChanges().listen(_onStateChanged);
   }
 
-   Future<bool> signIn(String email, String password) async {
+  Future<bool> signIn(String email, String password) async {
     try {
       _status = Status.Authenticating;
       notifyListeners();
-      await _firebaseAuth!.signInWithEmailAndPassword(email: email, password: password);
+      await _firebaseAuth!
+          .signInWithEmailAndPassword(email: email, password: password);
+      print("user succes");
       return true;
     } catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
+      Fluttertoast.showToast(msg: "error from sign in");
       Fluttertoast.showToast(msg: e.toString());
       print(e.toString());
       return false;

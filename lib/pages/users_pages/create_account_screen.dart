@@ -38,10 +38,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _globalkey = GlobalKey<FormState>();
   UserServicesRTDB _userServices = UserServicesRTDB();
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
+  TextEditingController _name = TextEditingController();
+  TextEditingController _email = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  TextEditingController _passwordController2 = TextEditingController();
+  TextEditingController _password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +149,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           return null;
         }
       },
-      controller: _passwordController2,
+      controller: _password,
       obscureText: !_showPassword2,
       decoration: InputDecoration(
         prefixIcon: Icon(
@@ -259,7 +259,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   Widget emailTextField() {
     return TextFormField(
-      controller: _emailController,
+      controller: _email,
       validator: (value) {
         Pattern pattern =
             r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
@@ -299,7 +299,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         if (value!.isEmpty) return "Username can't be empty";
         return null;
       },
-      controller: _usernameController,
+      controller: _name,
       decoration: InputDecoration(
         prefixIcon: Icon(
           Icons.person,
@@ -379,13 +379,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
       // // Navigator.pop(context);
       // // return Fluttertoast.showToast(msg: "Failed in creating an account");
-      if (!await user.signUp(_usernameController.text, _emailController.text,
-          _passwordController2.text)) {
+      if (!await user.signUp(_name.text, _email.text, _password.text)) {
         Fluttertoast.showToast(msg: "Failed to create an account!!");
-      }       Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
-        Fluttertoast.showToast(
-            msg: "Thanks for choosing us  ${_usernameController.text}");
+        return setState(() {
+          circular = false;
+        });
+      }
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
+      Fluttertoast.showToast(msg: "Thanks for choosing us  ${_name.text}");
     } else {
       setState(() {
         circular = false;

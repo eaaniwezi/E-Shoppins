@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app/home_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -5,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
 import 'package:ecommerce_app/pages/admin_pages/admin_home_screen.dart';
 import 'package:ecommerce_app/pages/users_pages/create_account_screen.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -25,8 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _globalkey = GlobalKey<FormState>();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -189,6 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget loginButton() {
+    final user = Provider.of<UserProvider>(context, listen: false);
     return GestureDetector(
       onTap: () async {
         setState(() {
@@ -197,20 +200,24 @@ class _LoginScreenState extends State<LoginScreen> {
         try {
           if (_globalkey.currentState!.validate()) {
             // ignore: unused_local_variable
-            User? user = (await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                        email: _emailController.text,
-                        password: _passwordController.text))
-                .user;
-            // ignore: unnecessary_null_comparison
-            if (user != null) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                  (route) => false);
-              Fluttertoast.showToast(
-                  msg: "Welcome back ${_emailController.text}");
-            }
+            // User? user = (await FirebaseAuth.instance
+            //         .signInWithEmailAndPassword(
+            //             email: _email.text,
+            //             password: _password.text))
+            //     .user;
+            // // ignore: unnecessary_null_comparison
+            // if (user != null) {
+            //   Navigator.pushAndRemoveUntil(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => HomePage()),
+            //       (route) => false);
+            //   Fluttertoast.showToast(
+            //       msg: "Welcome back ${_email.text}");
+            // }
+
+            if (!await user.signIn(_email.text, _password.text)) {
+              Fluttertoast.showToast(msg: "Error sign in");
+            } Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
           } else {
             setState(() {
               circular = false;
@@ -235,13 +242,15 @@ class _LoginScreenState extends State<LoginScreen> {
           color: Style.Colors.secondColor,
           elevation: 7.0,
           child: Center(
-            child: Text(
-              'LOGIN',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Montserrat'),
-            ),
+            child: circular
+                ? CircularProgressIndicator(color: Style.Colors.greenColor)
+                : Text(
+                    'LOGIN',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Montserrat'),
+                  ),
           ),
         ),
       ),
@@ -278,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
           return null;
         }
       },
-      controller: _passwordController,
+      controller: _password,
       obscureText: !_showPassword,
       decoration: InputDecoration(
         prefixIcon: Icon(
@@ -323,7 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (!value.contains("@")) return "Invalid Email";
         return null;
       },
-      controller: _emailController,
+      controller: _email,
       decoration: InputDecoration(
         prefixIcon: Icon(
           Icons.mail_outline_rounded,
