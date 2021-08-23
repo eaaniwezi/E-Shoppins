@@ -179,7 +179,7 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen>
   }
 
   _colorContainer() {
-    final productProvider = Provider.of<ProductProvider>(context);
+    final productProvider = Provider.of<AdminProductProvider>(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,

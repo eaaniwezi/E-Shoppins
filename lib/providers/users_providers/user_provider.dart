@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:ecommerce_app/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,9 +16,12 @@ class UserProvider with ChangeNotifier {
   FirebaseAuth? _firebaseAuth;
   User? _user;
   Status _status = Status.Uninitialized;
+  UserServices _userServices = UserServices();
+  UserModel? _userModel;
+
   Status get status => _status;
   User? get user => _user;
-  UserServices _userServices = UserServices();
+  UserModel? get userModel => _userModel;
 
   UserProvider.initialize() : _firebaseAuth = FirebaseAuth.instance {
     _firebaseAuth!.authStateChanges().listen(_onStateChanged);
@@ -54,6 +58,7 @@ class UserProvider with ChangeNotifier {
           'name': name,
           'email': email,
           'uid': user.user!.uid,
+          'stripeId': '',
         });
         notifyListeners();
       });
@@ -80,6 +85,7 @@ class UserProvider with ChangeNotifier {
       print("User is currently signed out");
     } else {
       _user = user;
+      _userModel = await _userServices.getUserById(user.uid);
       _status = Status.Authenticated;
     }
     notifyListeners();

@@ -15,6 +15,4 @@ class AppProvider with ChangeNotifier{
  
 
   List<ProductModel>  get featuredProducts => _featuredProducts;
-
-  void
 }

@@ -1,12 +1,16 @@
+import 'package:ecommerce_app/providers/users_providers/product_providers.dart';
+import 'package:ecommerce_app/widgets/single_product_gridView.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:page_indicator/page_indicator.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:ecommerce_app/style/theme.dart' as Style;
+import 'package:ecommerce_app/widgets/recent_products.dart';
+import 'package:ecommerce_app/widgets/horizontal_list.dart';
 import 'package:ecommerce_app/pages/users_pages/cart_screen.dart';
 import 'package:ecommerce_app/pages/users_pages/welcome_screen.dart';
-import 'package:ecommerce_app/widgets/horizontal_list.dart';
-import 'package:ecommerce_app/widgets/recent_products.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:ecommerce_app/style/theme.dart' as Style;
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:page_indicator/page_indicator.dart';
+import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -128,6 +132,9 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    // final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final productProvider =
+    Provider.of<ProductProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Style.Colors.mainColor,
       appBar: AppBar(
@@ -196,31 +203,27 @@ class _HomePageState extends State<HomePage>
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
-                // Spacer(),
-                // IconButton(onPressed: () {
-                //    setPostOrientation("list");
-                // }, icon: Icon(Icons.format_list_bulleted, color:  postOrientation == 'list'? Style.Colors.secondColor : Colors.white)),
-                // IconButton(onPressed: () {
-                //     setPostOrientation("grid");
-                // }, icon: Icon(Icons.apps, color:  postOrientation == 'grid'? Style.Colors.secondColor : Colors.white)),
-                // IconButton(onPressed: () {
-                //     setPostOrientation("full");
-                // }, icon: Icon(Icons.format_line_spacing_rounded, color: postOrientation == 'grid'? Style.Colors.secondColor : Colors.white)),
               ],
             ),
           ),
-          RecentProducts(),
+          // RecentProducts(),
+          Column(
+              children: productProvider.products
+                  .map((item) => GestureDetector(
+                        child: SingleProductGridView(product: item,
+                        ),
+                      ))
+                  .toList(),
+            ),
+          // Text(
+          //   "data",
+          //   style: TextStyle(color: Colors.white),
+          // ),
           SizedBox(height: 10)
         ],
       ),
     );
   }
-
-  // setPostOrientation(String postOrientation) {
-  //   setState(() {
-  //     this.postOrientation = postOrientation;
-  //   });
-  // }
 
   Widget _imageCarousel() {
     return Container(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ProductProvider with ChangeNotifier{
+class AdminProductProvider with ChangeNotifier{
   List<String> selectedColors = [];
 
   addColors(String color){

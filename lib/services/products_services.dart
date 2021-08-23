@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/product.dart';
 
@@ -12,7 +13,7 @@ class UsersProductServices {
           .then((snaps) {
         List<ProductModel> featuredProducts = [];
         snaps.docs.map((snapshot) =>
-            featuredProducts.add(ProductModel.fromDocument(snapshot)));
+            featuredProducts.add(ProductModel.fromSnapshot(snapshot)));
         return featuredProducts;
       });
 
@@ -20,8 +21,25 @@ class UsersProductServices {
       _firebaseFirestore.collection(colllection).get().then((result) {
         List<ProductModel> products = [];
         for (DocumentSnapshot product in result.docs) {
-          products.add(ProductModel.fromDocument(product));
+          products.add(ProductModel.fromSnapshot(product));
         }
         return products;
       });
+
+  Future<List<ProductModel>> searchProducts({String? productName}) {
+    String searchKey = productName![0].toUpperCase() + productName.substring(1);
+    return _firebaseFirestore
+        .collection(colllection)
+        .orderBy("name")
+        .startAt([searchKey])
+        .endAt([searchKey + '\uf8ff'])
+        .get()
+        .then((result) {
+          List<ProductModel> products = [];
+          for (DocumentSnapshot product in result.docs) {
+            products.add(ProductModel.fromSnapshot(product));
+          }
+          return products;
+        });
+  }
 }

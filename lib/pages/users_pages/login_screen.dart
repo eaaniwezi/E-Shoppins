@@ -199,25 +199,13 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         try {
           if (_globalkey.currentState!.validate()) {
-            // ignore: unused_local_variable
-            // User? user = (await FirebaseAuth.instance
-            //         .signInWithEmailAndPassword(
-            //             email: _email.text,
-            //             password: _password.text))
-            //     .user;
-            // // ignore: unnecessary_null_comparison
-            // if (user != null) {
-            //   Navigator.pushAndRemoveUntil(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => HomePage()),
-            //       (route) => false);
-            //   Fluttertoast.showToast(
-            //       msg: "Welcome back ${_email.text}");
-            // }
-
             if (!await user.signIn(_email.text, _password.text)) {
               Fluttertoast.showToast(msg: "Error sign in");
-            } Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
+            }
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+                (route) => false);
           } else {
             setState(() {
               circular = false;

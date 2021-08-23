@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/providers/users_providers/app_providers.dart';
+import 'package:ecommerce_app/providers/users_providers/product_providers.dart';
 import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,8 +36,9 @@ class MyApp extends StatelessWidget {
             return MultiProvider(
               providers: [
                 ChangeNotifierProvider.value(value: UserProvider.initialize()),
+                ChangeNotifierProvider.value(value: ProductProvider.initialize()),
                 ChangeNotifierProvider.value(value: AppProvider()),
-                ChangeNotifierProvider.value(value: ProductProvider()),
+                ChangeNotifierProvider.value(value: AdminProductProvider()),
               ],
               child: MaterialApp(
                 debugShowCheckedModeBanner: false,
