@@ -1,4 +1,6 @@
 import 'package:ecommerce_app/providers/users_providers/product_providers.dart';
+import 'package:ecommerce_app/services/products_services.dart';
+import 'package:ecommerce_app/widgets/featured_products.dart';
 import 'package:ecommerce_app/widgets/single_product_gridView.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,120 +23,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  PageController pageController =
-      PageController(viewportFraction: 1, keepPage: true);
   final GoogleSignIn googleSignIn = new GoogleSignIn();
-
-  List<Widget> _list = [
-    Container(
-      // width: MediaQuery.of(context).size.width,
-      height: 220.0,
-      decoration: new BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        shape: BoxShape.rectangle,
-        image: new DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage("images/image/1.jpg"),
-        ),
-      ),
-    ),
-    Container(
-      // width: MediaQuery.of(context).size.width,
-      height: 220.0,
-      decoration: new BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        shape: BoxShape.rectangle,
-        image: new DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage("images/image/2.jpg"),
-        ),
-      ),
-    ),
-    Container(
-      // width: MediaQuery.of(context).size.width,
-      height: 220.0,
-      decoration: new BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        shape: BoxShape.rectangle,
-        image: new DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage("images/image/3.jpg"),
-        ),
-      ),
-    ),
-    Container(
-      // width: MediaQuery.of(context).size.width,
-      height: 220.0,
-      decoration: new BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        shape: BoxShape.rectangle,
-        image: new DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage("images/image/4.jpg"),
-        ),
-      ),
-    ),
-    Container(
-      // width: MediaQuery.of(context).size.width,
-      height: 220.0,
-      decoration: new BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        shape: BoxShape.rectangle,
-        image: new DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage("images/image/5.jpg"),
-        ),
-      ),
-    ),
-    Container(
-      // width: MediaQuery.of(context).size.width,
-      height: 220.0,
-      decoration: new BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        shape: BoxShape.rectangle,
-        image: new DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage("images/image/6.png"),
-        ),
-      ),
-    ),
-  ];
-
-  //  String postOrientation = "grid";
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => _animateSlider());
-  }
-
-  void _animateSlider() {
-    Future.delayed(Duration(seconds: 2)).then((_) {
-      int nextPage = pageController.page!.round() + 1;
-
-      if (nextPage == _list.length) {
-        nextPage = 0;
-      }
-
-      pageController
-          .animateToPage(nextPage,
-              duration: Duration(seconds: 3), curve: Curves.fastOutSlowIn)
-          .then((_) => _animateSlider());
-    });
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    pageController.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
     // final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final productProvider =
-    Provider.of<ProductProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Style.Colors.mainColor,
       appBar: AppBar(
@@ -168,7 +61,7 @@ class _HomePageState extends State<HomePage>
       ),
       body: new ListView(
         children: [
-          _imageCarousel(),
+          FeaturedProductsBuilder(),
           Padding(
             padding: const EdgeInsets.all(15),
             child: Row(
@@ -206,52 +99,20 @@ class _HomePageState extends State<HomePage>
               ],
             ),
           ),
-          // RecentProducts(),
-          Column(
-              children: productProvider.products
-                  .map((item) => GestureDetector(
-                        child: SingleProductGridView(product: item,
-                        ),
-                      ))
-                  .toList(),
-            ),
-          // Text(
-          //   "data",
-          //   style: TextStyle(color: Colors.white),
-          // ),
+          RecentProductsBuilder(),
           SizedBox(height: 10)
         ],
       ),
     );
   }
-
-  Widget _imageCarousel() {
-    return Container(
-      height: 220,
-      child: PageIndicatorContainer(
-        align: IndicatorAlign.bottom,
-        length: 6,
-        indicatorSpace: 8,
-        padding: const EdgeInsets.all(5),
-        indicatorColor: Style.Colors.titleColor,
-        indicatorSelectorColor: Style.Colors.secondColor,
-        shape: IndicatorShape.circle(size: 5),
-        child: PageView(
-          allowImplicitScrolling: false,
-          controller: pageController,
-          scrollDirection: Axis.horizontal,
-          children: _list,
-        ),
-      ),
-    );
-  }
-
   Widget _drawerChildren() {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     return new ListView(
       children: [
         new UserAccountsDrawerHeader(
-          accountName: Text("Lewiz"),
-          accountEmail: Text("eaaninwezi@gmail.com"),
+          accountName:
+              Text(userProvider.userModel?.name ?? "username lading...",),
+          accountEmail: Text(userProvider.userModel?.email ?? "email loading...", ),
           currentAccountPicture: GestureDetector(
             child: new CircleAvatar(
               backgroundColor: Colors.grey,

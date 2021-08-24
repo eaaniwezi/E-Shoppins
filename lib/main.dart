@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
             return MultiProvider(
               providers: [
                 ChangeNotifierProvider.value(value: UserProvider.initialize()),
-                ChangeNotifierProvider.value(value: ProductProvider.initialize()),
+                ChangeNotifierProvider.value(value: UsersProductProvider.initialize()),
                 ChangeNotifierProvider.value(value: AppProvider()),
                 ChangeNotifierProvider.value(value: AdminProductProvider()),
               ],

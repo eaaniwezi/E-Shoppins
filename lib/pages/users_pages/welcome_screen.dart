@@ -77,11 +77,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       if (documents.length == 0) {
         FirebaseFirestore.instance.collection("users").doc(user.uid).set({
-          "id": user.uid,
-          "username": user.displayName,
+          "uid": user.uid,
+          "name": user.displayName,
           "email": user.email,
           "profilePicture": user.photoURL,
           "phoneNumber": user.phoneNumber,
+           "stripeId":  "",
         });
 
         await preferences.setString("id", user.uid);

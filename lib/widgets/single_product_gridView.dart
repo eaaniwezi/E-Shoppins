@@ -12,7 +12,7 @@ class SingleProductGridView extends StatelessWidget {
   const SingleProductGridView({
     Key? key,
     required this.product,
-    name,
+    
   }) : super(key: key);
   // final name;
   // final picture;
@@ -64,50 +64,66 @@ class SingleProductGridView extends StatelessWidget {
           height: 400,
           child: Column(
             children: [
-              // Expanded(
-              //   child: Container(
-              //     // width: double.infinity,
-              //     height: 150,
-              //     decoration: BoxDecoration(
-              //         borderRadius: BorderRadius.only(
-              //           topLeft: Radius.circular(20.0),
-              //           topRight: Radius.zero,
-              //           bottomLeft: Radius.zero,
-              //           bottomRight: Radius.circular(20.0),
-              //         ),
-              //         image: DecorationImage(
-              //             image: NetworkImage(product.pictures![1]),
-              //             fit: BoxFit.cover)),
-              //   ),
-              // ),
+              Expanded(
+                child: Container(
+                  // width: double.infinity,
+                  height: 150,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.zero,
+                        bottomLeft: Radius.zero,
+                        bottomRight: Radius.circular(20.0),
+                      ),
+                      image: DecorationImage(
+                          image: NetworkImage(product.pictures![1]),
+                          fit: BoxFit.cover)),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(2.4),
-                child: Row(
+                child: Column(
                   children: [
-                    Text(
-                       product.name.toString(),
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Spacer(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
                       children: [
-                        Text(
-                          "jiasjd",
-                          // "\$$product.price. / 100",
-                          style: TextStyle(
-                              color: Colors.red, fontWeight: FontWeight.w800),
+                        Container(
+                          width: 100,
+                          child: Text(
+                            product.name.toString(),
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                        // Text(
-                        //   "\$$old_price",
-                        //   style: TextStyle(
-                        //       color: Colors.black54,
-                        //       fontWeight: FontWeight.w800,
-                        //       decoration: TextDecoration.lineThrough),
-                        // ),
+                        Spacer(),
+                        Container(
+                           width: 50,
+                          child: Text(
+                            '\$${product.price! / 100} \t',
+                             overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                        SizedBox(width: 5)
                       ],
                     ),
-                    SizedBox(width: 5)
+                    // Row(
+                    //   children: [
+                    //     Text(
+                    //      'by: ${product.brand} \n\n\n\n',
+                    //       style: TextStyle(fontWeight: FontWeight.bold),
+                    //     ),
+                    //     Spacer(),
+                    //     Text(
+                    //      product.sale != null ? 'ON SALE ' : "",
+                    //       style: TextStyle(
+                    //           color: Colors.red, fontWeight: FontWeight.w800),
+                    //     ),
+                    //     SizedBox(width: 5)
+                    //   ],
+                    // ),
                   ],
                 ),
               ),

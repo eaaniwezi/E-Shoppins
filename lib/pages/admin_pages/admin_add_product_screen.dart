@@ -25,6 +25,7 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen>
   TextEditingController _productNameController = TextEditingController();
   TextEditingController _productQuatityController = TextEditingController();
   TextEditingController _productPriceController = TextEditingController();
+  TextEditingController _productDescriptionController = TextEditingController();
   List<DocumentSnapshot> brands = <DocumentSnapshot>[];
   List<DocumentSnapshot> categories = <DocumentSnapshot>[];
   List<String> selectedSizes = <String>[];
@@ -108,6 +109,8 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen>
                         _imageContainer(),
                         _productNameContainer(),
                         SizedBox(height: 5),
+                        _productDescriptionContainer(),
+                        SizedBox(height: 5),
                         _getCategories(),
                         SizedBox(height: 5),
                         _getBrands(),
@@ -135,6 +138,35 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen>
                 ),
               ),
             ),
+    );
+  }
+
+  Widget _productDescriptionContainer() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+        // keyboardType: TextInputType.multiline,
+        maxLines: null,
+        // minLines: 3,
+        // expands: true,
+        style: TextStyle(color: Style.Colors.mainColor),
+         validator: (value) {
+          if (value!.isEmpty) {
+            return 'product description cant be empty';
+          } else if (value.length > 100) {
+            return 'product description cant be more than 10 characters';
+          }
+        },
+        controller: _productDescriptionController,
+          decoration: InputDecoration(
+            labelText: "Product description",
+            labelStyle: TextStyle(color: Style.Colors.mainColor, fontSize: 15),
+            hintText: "Product description should\'nt be more than 100 characters",
+            hintStyle: TextStyle(
+              color: Style.Colors.secondColor,
+              fontSize: 12,
+            )),
+      ),
     );
   }
 
@@ -1028,6 +1060,7 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen>
 
                 _productService.uploadProduct({
                   "name": _productNameController.text,
+                  "description": _productDescriptionController.text,
                   "price": double.parse(_productPriceController.text),
                   "sizes": selectedSizes,
                   "colors": colors,

@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CategoryService {
   // static CategoryService _instance = CategoryService();

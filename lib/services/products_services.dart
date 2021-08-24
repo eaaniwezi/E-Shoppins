@@ -12,8 +12,11 @@ class UsersProductServices {
           .get()
           .then((snaps) {
         List<ProductModel> featuredProducts = [];
-        snaps.docs.map((snapshot) =>
-            featuredProducts.add(ProductModel.fromSnapshot(snapshot)));
+        // snaps.docs.map((snapshot) =>
+        //     featuredProducts.add(ProductModel.fromSnapshot(snapshot)));
+         for (DocumentSnapshot featuredProduct in snaps.docs) {
+          featuredProducts.add(ProductModel.fromSnapshot(featuredProduct));
+        }
         return featuredProducts;
       });
 
