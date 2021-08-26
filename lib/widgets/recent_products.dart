@@ -25,11 +25,8 @@ class RecentProductsBuilder extends StatelessWidget {
         mainAxisSpacing: 10,
         crossAxisCount: 2,
         children: productProvider.products
-            .map((item) => GestureDetector(
-                  onTap: () {},
-                  child: SingleProductGridView(
-                    product: item,
-                  ),
+            .map((item) => SingleProductGridView(
+                  product: item,
                 ))
             .toList(),
       ),

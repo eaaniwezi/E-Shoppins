@@ -18,28 +18,28 @@ class _FeaturedProductsBuilderState extends State<FeaturedProductsBuilder>
   PageController pageController =
       PageController(viewportFraction: 1, keepPage: true);
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => _animateSlider());
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance!.addPostFrameCallback((_) => _animateSlider());
+  // }
 
-  void _animateSlider() {
-    final productProvider =
-        Provider.of<UsersProductProvider>(context, listen: false);
-    Future.delayed(Duration(seconds: 2)).then((_) {
-      int nextPage = pageController.page!.round() + 1;
+  // void _animateSlider() {
+  //   final productProvider =
+  //       Provider.of<UsersProductProvider>(context, listen: false);
+  //   Future.delayed(Duration(seconds: 2)).then((_) {
+  //     int nextPage = pageController.page!.round() + 1;
 
-      if (nextPage == productProvider.products.length) {
-        nextPage = 0;
-      }
+  //     if (nextPage == productProvider.products.length) {
+  //       nextPage = 0;
+  //     }
 
-      pageController
-          .animateToPage(nextPage,
-              duration: Duration(seconds: 3), curve: Curves.fastOutSlowIn)
-          .then((_) => _animateSlider());
-    });
-  }
+  //     pageController
+  //         .animateToPage(nextPage,
+  //             duration: Duration(seconds: 3), curve: Curves.fastOutSlowIn)
+  //         .then((_) => _animateSlider());
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -72,7 +72,7 @@ class _FeaturedProductsBuilderState extends State<FeaturedProductsBuilder>
         Provider.of<UsersProductProvider>(context, listen: false);
     return Container(
       height: 220,
-      child: productProvider.featuredProducts.length > 0
+      child: productProvider.featuredProducts.length  > 0
           ? PageIndicatorContainer(
               align: IndicatorAlign.bottom,
               length: productProvider.featuredProducts.length,
@@ -87,7 +87,9 @@ class _FeaturedProductsBuilderState extends State<FeaturedProductsBuilder>
                 scrollDirection: Axis.horizontal,
                 children: productProvider.featuredProducts
                     .map((item) => GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            print("object");
+                          },
                           child: FeaturedImageContainer(
                             productPictures: item,
                           ),

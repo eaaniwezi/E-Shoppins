@@ -1,39 +1,17 @@
-import 'package:ecommerce_app/home_page.dart';
-import 'package:ecommerce_app/pages/users_pages/cart_screen.dart';
+import 'package:ecommerce_app/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
+
+import 'package:ecommerce_app/home_page.dart';
+import 'package:ecommerce_app/model/product.dart';
+import 'package:ecommerce_app/pages/users_pages/cart_screen.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
+import 'package:transparent_image/transparent_image.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  // ignore: non_constant_identifier_names
-  final product_details_name;
-  // ignore: non_constant_identifier_names
-  final product_details_current_price;
-  // ignore: non_constant_identifier_names
-  final product_details_old_price;
-  // ignore: non_constant_identifier_names
-  final product_details_picture;
-  // ignore: non_constant_identifier_names
-  final product_details_description;
-  // ignore: non_constant_identifier_names
-  final product_details_color;
-  // ignore: non_constant_identifier_names
-  final other_pictures;
+  final ProductModel product;
   const ProductDetailsScreen({
     Key? key,
-    // ignore: non_constant_identifier_names
-    this.product_details_name,
-    // ignore: non_constant_identifier_names
-    this.product_details_current_price,
-    // ignore: non_constant_identifier_names
-    this.product_details_old_price,
-    // ignore: non_constant_identifier_names
-    this.product_details_picture,
-    // ignore: non_constant_identifier_names
-    this.product_details_description,
-    // ignore: non_constant_identifier_names
-    this.product_details_color,
-    // ignore: non_constant_identifier_names
-    this.other_pictures,
+    required this.product,
   }) : super(key: key);
 
   @override
@@ -41,6 +19,8 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  String _color = "";
+  String _size = "";
   var _maxLines = 3;
   int selectedImage = 0;
   int selectedColor = 0;
@@ -71,7 +51,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               vertical: 10,
             ),
             child: Text(
-              widget.product_details_name,
+              widget.product.name.toString(),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w400,
@@ -106,7 +86,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               right: 64,
             ),
             child: Text(
-              widget.product_details_description,
+              widget.product.description.toString(),
               overflow: TextOverflow.ellipsis,
               maxLines: _maxLines,
               textAlign: TextAlign.justify,
@@ -153,7 +133,43 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             child: Column(
               children: [
                 _productSize(),
-                _productsColors(),
+                // _productsColors(),
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        "Select a Color",
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: DropdownButton<String>(
+                          value: _color,
+                          // style: TextStyle(color: white),
+                          items: widget.product.colors!
+                              .map<DropdownMenuItem<String>>(
+                                  (value) => DropdownMenuItem(
+                                        value: value,
+                                        child: Text(
+                                          value,
+                                          style: TextStyle(
+                                              color: Style.Colors.secondColor),
+                                        ),
+                                        // child: CustomText(
+                                        //   text: value,
+                                        //   color: red,
+                                        // )
+                                      ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _color = value!;
+                            });
+                          }),
+                    )
+                  ],
+                ),
                 _addToCart(),
               ],
             ),
@@ -248,7 +264,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       child: Row(
         children: [
           ...List.generate(
-            widget.product_details_color.length,
+            widget.product.colors!.length,
             (index) => GestureDetector(
               onTap: () {
                 setState(() {
@@ -269,7 +285,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: widget.product_details_color[index],
+                    color: widget.product.colors![index],
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -298,7 +314,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       title: InkWell(
         child: Text('E-Shoppins'),
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => new HomePage()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => new HomePage()));
         },
       ),
       backgroundColor: Style.Colors.mainColor,
@@ -306,8 +323,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         // new IconButton(onPressed: () {}, icon: Icon(Icons.search)),
         new IconButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen()));
-            }, icon: Icon(Icons.shopping_cart_outlined)),
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CartScreen()));
+            },
+            icon: Icon(Icons.shopping_cart_outlined)),
       ],
       leading: IconButton(
           onPressed: () {
@@ -320,25 +339,36 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget _productImage() {
     return Column(
       children: [
-        SizedBox(
-          //  width: 238,
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Hero(
-              tag: widget.product_details_name,
-              child: Image.asset(
-                widget.other_pictures[selectedImage],
-                fit: BoxFit.cover,
+        Stack(
+          children: [
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.center,
+                child: LoadingWidget(),
               ),
             ),
-          ),
+            SizedBox(
+              //  width: 238,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Hero(
+                  tag: widget.product.id.toString(),
+                  child: FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image: widget.product.pictures![selectedImage],
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ...List.generate(widget.other_pictures.length,
+              ...List.generate(widget.product.pictures!.length,
                   (index) => buildSmallProductPreview(index))
             ],
           ),
@@ -354,23 +384,34 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           selectedImage = index;
         });
       },
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 250),
-        margin: EdgeInsets.only(right: 15),
-        padding: EdgeInsets.all(0),
-        height: 48,
-        width: 48,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-              color: Style.Colors.secondColor
-                  .withOpacity(selectedImage == index ? 1 : 0)),
-        ),
-        child: Image.asset(
-          widget.other_pictures[index],
-          fit: BoxFit.cover,
-        ),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.center,
+              child: LoadingWidget(),
+            ),
+          ),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 250),
+            margin: EdgeInsets.only(right: 15),
+            padding: EdgeInsets.all(0),
+            height: 48,
+            width: 48,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                  color: Style.Colors.secondColor
+                      .withOpacity(selectedImage == index ? 1 : 0)),
+            ),
+            child: FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage,
+              image: widget.product.pictures![index],
+              fit: BoxFit.cover,
+            ),
+          ),
+        ],
       ),
     );
   }

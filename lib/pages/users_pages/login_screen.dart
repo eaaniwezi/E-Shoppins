@@ -250,7 +250,9 @@ class _LoginScreenState extends State<LoginScreen> {
       alignment: Alignment(1.0, 0.0),
       padding: EdgeInsets.only(top: 15.0, left: 20.0),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Fluttertoast.showToast(msg: "Why did you forget your password, Ode!!");
+        },
         child: Text(
           'Forgot Password',
           style: TextStyle(
