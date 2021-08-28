@@ -36,37 +36,39 @@ class SingleProductGridView extends StatelessWidget {
           height: 400,
           child: Column(
             children: [
-              Stack(
-                children: [
-                  Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: LoadingWidget(),
+              Expanded(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: LoadingWidget(),
+                      ),
                     ),
-                  ),
-                  Container(
-                    // width: double.infinity,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        topRight: Radius.zero,
-                        bottomLeft: Radius.zero,
-                        bottomRight: Radius.circular(20.0),
-                      ),
-                      // image: DecorationImage(
-                      //     image: NetworkImage(product.pictures![1]),
-                      //     fit: BoxFit.cover),
-                      ),
-                    child: FadeInImage.memoryNetwork(
-                      placeholder: kTransparentImage,
-                      image: product.pictures![1],
-                      fit: BoxFit.cover,
+                    Container(
+                      // width: double.infinity,
                       height: 150,
-                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20.0),
+                          topRight: Radius.zero,
+                          bottomLeft: Radius.zero,
+                          bottomRight: Radius.circular(20.0),
+                        ),
+                        // image: DecorationImage(
+                        //     image: NetworkImage(product.pictures![1]),
+                        //     fit: BoxFit.cover),
+                        ),
+                      child: FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: product.pictures![1],
+                        fit: BoxFit.cover,
+                        height: 150,
+                        width: double.infinity,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(2.4),
@@ -97,21 +99,6 @@ class SingleProductGridView extends StatelessWidget {
                         SizedBox(width: 5)
                       ],
                     ),
-                    // Row(
-                    //   children: [
-                    //     Text(
-                    //      'by: ${product.brand} \n\n\n\n',
-                    //       style: TextStyle(fontWeight: FontWeight.bold),
-                    //     ),
-                    //     Spacer(),
-                    //     Text(
-                    //      product.sale != null ? 'ON SALE ' : "",
-                    //       style: TextStyle(
-                    //           color: Colors.red, fontWeight: FontWeight.w800),
-                    //     ),
-                    //     SizedBox(width: 5)
-                    //   ],
-                    // ),
                   ],
                 ),
               ),

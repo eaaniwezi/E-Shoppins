@@ -19,7 +19,7 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  String _color = "";
+  String _color = "none";
   String _size = "";
   var _maxLines = 3;
   int selectedImage = 0;
@@ -132,43 +132,42 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             color: Colors.white,
             child: Column(
               children: [
-                _productSize(),
+                // _productSize(),
                 // _productsColors(),
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
-                        "Select a Color",
+                // Text(widget.product.colors.toString()),
+
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Select a color",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Style.Colors.secondColor,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: DropdownButton<String>(
-                          value: _color,
-                          // style: TextStyle(color: white),
-                          items: widget.product.colors!
-                              .map<DropdownMenuItem<String>>(
-                                  (value) => DropdownMenuItem(
-                                        value: value,
-                                        child: Text(
-                                          value,
-                                          style: TextStyle(
-                                              color: Style.Colors.secondColor),
-                                        ),
-                                        // child: CustomText(
-                                        //   text: value,
-                                        //   color: red,
-                                        // )
-                                      ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _color = value!;
-                            });
-                          }),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: DropdownButton<String>(
+                          focusColor: Colors.pink,
+                            value: _color,
+                            // style: TextStyle(color: white),
+                            items: widget.product.colors!
+                                .map<DropdownMenuItem<String>>((value) =>
+                                    DropdownMenuItem(
+                                        value: value, child: Text(value)))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _color = value!;
+                              });
+                            }),
+                      ),
+                    ],
+                  ),
                 ),
                 _addToCart(),
               ],
@@ -274,8 +273,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               child: Container(
                 margin: EdgeInsets.only(right: 2),
                 padding: EdgeInsets.all(8),
-                height: 40,
-                width: 40,
+                height: 70,
+                width: 70,
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   border: Border.all(
@@ -283,12 +282,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           .withOpacity(selectedColor == index ? 1 : 0)),
                   shape: BoxShape.circle,
                 ),
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: widget.product.colors![index],
-                    shape: BoxShape.circle,
-                  ),
-                ),
+                child: Text(widget.product.colors.toString()),
+                // child: DecoratedBox(
+                //   decoration: BoxDecoration(
+                //     color: widget.product.colors![index],
+                //     shape: BoxShape.circle,
+                //   ),
+                // ),
               ),
             ),
           ),
