@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'package:ecommerce_app/model/cart_item.dart';
+import 'package:ecommerce_app/model/product.dart';
 import 'package:ecommerce_app/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ecommerce_app/services/user_services.dart';
+import 'package:uuid/uuid.dart';
 
 enum Status {
   Uninitialized,
@@ -77,6 +80,25 @@ class UserProvider with ChangeNotifier {
     _status = Status.Unauthenticated;
     notifyListeners();
     return Future.delayed(Duration.zero);
+  }
+
+  Future<bool> addToCart({ProductModel? product, String? size, String? color}) async{
+    try {
+      var uuid = Uuid();
+      String cartItemId = uuid.v4();
+      List<CartItemModel>? cart = _userModel!.cart;
+
+     Map cartItem = {
+        "id": cartItemId,
+        "name": product!.name,
+        "image": product.pictures,
+        "productId": product.id,
+        "price": product.price,
+        "size": size,
+        "color": color
+      };
+    } catch (e) {
+    }
   }
 
   Future<void> _onStateChanged(User? user) async {

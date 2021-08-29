@@ -599,6 +599,7 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen>
       });
     } else {
       setState(() {
+        selectedSizes.add('none');
         selectedSizes.insert(0, size);
       });
     }

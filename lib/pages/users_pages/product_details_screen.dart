@@ -20,10 +20,11 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   String _color = "none";
-  String _size = "";
+  String _size = "any";
   var _maxLines = 3;
   int selectedImage = 0;
   int selectedColor = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,42 +137,96 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 // _productsColors(),
                 // Text(widget.product.colors.toString()),
 
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Select a color",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Style.Colors.secondColor,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: DropdownButton<String>(
-                          focusColor: Colors.pink,
-                            value: _color,
-                            // style: TextStyle(color: white),
-                            items: widget.product.colors!
-                                .map<DropdownMenuItem<String>>((value) =>
-                                    DropdownMenuItem(
-                                        value: value, child: Text(value)))
-                                .toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _color = value!;
-                              });
-                            }),
-                      ),
-                    ],
-                  ),
-                ),
+                _selectColor(),
+                _selectSize(),
                 _addToCart(),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _selectSize() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Choose a size",
+            style: TextStyle(
+              fontSize: 15,
+              color: Style.Colors.secondColor,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: DropdownButton<String>(
+                value: _size,
+                // style: TextStyle(color: white),
+                items: widget.product.sizes!
+                    .map<DropdownMenuItem<String>>((value1) => DropdownMenuItem(
+                        value: value1,
+                        child: Text(
+                          value1,
+                        )))
+                    .toList(),
+                onChanged: (value1) {
+                  setState(() {
+                    _size = value1!;
+                    print(value1);
+                  });
+                }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _selectColor() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Select a color",
+            style: TextStyle(
+              fontSize: 15,
+              color: Style.Colors.secondColor,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: DropdownButton<String>(
+                value: _color,
+                // style: TextStyle(color: white),
+                items: widget.product.colors!
+                    .map<DropdownMenuItem<String>>((value) => DropdownMenuItem(
+                        value: value,
+                        child: Text(value,
+                            style: TextStyle(
+                              color: value == "green"
+                                  ? Colors.green
+                                  : value == "red"
+                                      ? Colors.red
+                                      : value == "yellow"
+                                          ? Colors.yellow
+                                          : value == "blue"
+                                              ? Colors.blue
+                                              : Colors.black,
+                            ))))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _color = value!;
+                    print(value);
+                  });
+                }),
           ),
         ],
       ),
