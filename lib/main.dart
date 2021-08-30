@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/pages/users_pages/forgot_%20password_screen.dart';
 import 'package:ecommerce_app/providers/users_providers/app_providers.dart';
 import 'package:ecommerce_app/providers/users_providers/product_providers.dart';
 import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
                 // home: AdminAddProductScreen(),
                 // home:  AdminHomeScreen(),
                 home: WelcomeScreen(),
+                // home: ForgotPasswordScreen(),
                 // home: HomePage(),
               ),
             );

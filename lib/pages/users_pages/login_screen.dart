@@ -1,8 +1,8 @@
+import 'package:ecommerce_app/pages/users_pages/forgot_%20password_screen.dart';
 import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app/home_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
 import 'package:ecommerce_app/pages/admin_pages/admin_home_screen.dart';
 import 'package:ecommerce_app/pages/users_pages/create_account_screen.dart';
@@ -24,7 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   bool circular = false;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _globalkey = GlobalKey<FormState>();
   TextEditingController _email = TextEditingController();
@@ -252,6 +251,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: InkWell(
         onTap: () {
           Fluttertoast.showToast(msg: "Why did you forget your password, Ode!!");
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
         },
         child: Text(
           'Forgot Password',

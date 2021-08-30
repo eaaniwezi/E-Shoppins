@@ -75,6 +75,25 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> resetPassword(String email) async {
+    try {
+      _status = Status.Authenticating;
+      notifyListeners();
+      await _firebaseAuth!.sendPasswordResetEmail(email: email);
+      print("Check Your E-mail");
+      Fluttertoast.showToast(msg: "Check your E-mail");
+      Fluttertoast.showToast(msg:"A reset link has been sent to this email $email");
+      return true;
+    } catch (e) {
+      _status = Status.Unauthenticated;
+      notifyListeners();
+      Fluttertoast.showToast(msg: "error from reset-password");
+      print(e.toString());
+      Fluttertoast.showToast(msg: e.toString());
+      return false;
+    }
+  }
+
   Future signOut() async {
     _firebaseAuth!.signOut();
     _status = Status.Unauthenticated;
@@ -82,24 +101,24 @@ class UserProvider with ChangeNotifier {
     return Future.delayed(Duration.zero);
   }
 
-  Future<bool> addToCart({ProductModel? product, String? size, String? color}) async{
-    try {
-      var uuid = Uuid();
-      String cartItemId = uuid.v4();
-      List<CartItemModel>? cart = _userModel!.cart;
+  // Future<bool> addToCart({ProductModel? product, String? size, String? color}) async{
+  //   try {
+  //     var uuid = Uuid();
+  //     String cartItemId = uuid.v4();
+  //     List<CartItemModel>? cart = _userModel!.cart;
 
-     Map cartItem = {
-        "id": cartItemId,
-        "name": product!.name,
-        "image": product.pictures,
-        "productId": product.id,
-        "price": product.price,
-        "size": size,
-        "color": color
-      };
-    } catch (e) {
-    }
-  }
+  //    Map cartItem = {
+  //       "id": cartItemId,
+  //       "name": product!.name,
+  //       "image": product.pictures,
+  //       "productId": product.id,
+  //       "price": product.price,
+  //       "size": size,
+  //       "color": color
+  //     };
+  //   } catch (e) {
+  //   }
+  // }
 
   Future<void> _onStateChanged(User? user) async {
     if (user == null) {
