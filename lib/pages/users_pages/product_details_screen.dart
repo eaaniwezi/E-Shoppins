@@ -318,6 +318,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   product: widget.product, color: _color, size: _size);
               if (successfullyAddedCart) {
                 Fluttertoast.showToast(msg: "Thanks for Carting me!");
+                 userProvider.reloadUserModel();
               } else {
                 Fluttertoast.showToast(msg: "Error adding to cart");
               }

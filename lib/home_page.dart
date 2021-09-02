@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/pages/users_pages/cart_main_screen.dart';
 import 'package:ecommerce_app/providers/users_providers/product_providers.dart';
 import 'package:ecommerce_app/services/products_services.dart';
 import 'package:ecommerce_app/widgets/featured_products.dart';
@@ -48,7 +49,7 @@ class _HomePageState extends State<HomePage>
           new IconButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CartScreen()));
+                    MaterialPageRoute(builder: (context) => CartMainScreen()));
               },
               icon: Icon(
                 Icons.shopping_cart_outlined,
@@ -105,14 +106,18 @@ class _HomePageState extends State<HomePage>
       ),
     );
   }
+
   Widget _drawerChildren() {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     return new ListView(
       children: [
         new UserAccountsDrawerHeader(
-          accountName:
-              Text(userProvider.userModel?.name ?? "username lading...",),
-          accountEmail: Text(userProvider.userModel?.email ?? "email loading...", ),
+          accountName: Text(
+            userProvider.userModel?.name ?? "username lading...",
+          ),
+          accountEmail: Text(
+            userProvider.userModel?.email ?? "email loading...",
+          ),
           currentAccountPicture: GestureDetector(
             child: new CircleAvatar(
               backgroundColor: Colors.grey,

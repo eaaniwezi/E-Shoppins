@@ -129,6 +129,11 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+   Future<void> reloadUserModel()async{
+    _userModel = await _userServices.getUserById(user!.uid);
+    notifyListeners();
+  }
+
   Future<void> _onStateChanged(User? user) async {
     if (user == null) {
       _status = Status.Unauthenticated;
@@ -136,6 +141,10 @@ class UserProvider with ChangeNotifier {
     } else {
       _user = user;
       _userModel = await _userServices.getUserById(user.uid);
+      print(_userModel!.cart!.length);
+      print(_userModel!.cart!.length);
+      print(_userModel!.cart!.length);
+      print(_userModel!.cart!.length);
       _status = Status.Authenticated;
     }
     notifyListeners();
