@@ -1,5 +1,5 @@
+// Just a dummy model i earlier created..Not been used in the app anymore
 import 'package:flutter/material.dart';
-
 import 'package:ecommerce_app/widgets/recent_products.dart';
 
 class PopularProducts {

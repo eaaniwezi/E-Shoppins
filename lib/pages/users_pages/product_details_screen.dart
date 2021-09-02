@@ -1,3 +1,5 @@
+import 'package:ecommerce_app/providers/users_providers/app_providers.dart';
+import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
 import 'package:ecommerce_app/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -5,6 +7,8 @@ import 'package:ecommerce_app/home_page.dart';
 import 'package:ecommerce_app/model/product.dart';
 import 'package:ecommerce_app/pages/users_pages/cart_screen.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -19,15 +23,25 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  String _color = "none";
-  String _size = "any";
+  String _color = "";
+  String _size = "";
   var _maxLines = 3;
   int selectedImage = 0;
   int selectedColor = 0;
+  final _key = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _color = widget.product.colors![0];
+    _size = widget.product.sizes![0];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
       backgroundColor: Style.Colors.mainColor,
       appBar: _appBar(),
       body: ListView(
@@ -279,6 +293,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   _addToCart() {
+    final userProvider = Provider.of<UserProvider>(context);
+    final appProvider = Provider.of<AppProvider>(context);
     return TopRoundedContainer(
       color: Colors.white,
       child: Padding(
@@ -296,16 +312,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             color: Style.Colors.secondColor,
-            onPressed: () {
-              print("Added to cart");
+            onPressed: () async {
+              appProvider.changeIsLoading();
+              bool successfullyAddedCart = await userProvider.addToCart(
+                  product: widget.product, color: _color, size: _size);
+              if (successfullyAddedCart) {
+                Fluttertoast.showToast(msg: "Thanks for Carting me!");
+              } else {
+                Fluttertoast.showToast(msg: "Error adding to cart");
+              }
+              appProvider.changeIsLoading();
             },
-            child: Text(
-              "Add To Cart",
-              style: TextStyle(
-                fontSize: 18,
-                color: Style.Colors.mainColor,
-              ),
-            ),
+            child: appProvider.isLoading 
+                ? LoadingWidget()
+                : Text(
+                    "Add To Cart",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Style.Colors.mainColor,
+                    ),
+                  ),
           ),
         ),
       ),

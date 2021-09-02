@@ -82,7 +82,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           "email": user.email,
           "profilePicture": user.photoURL,
           "phoneNumber": user.phoneNumber,
-           "stripeId":  "",
+          "stripeId": "",
+          "cart": [],
         });
 
         await preferences.setString("id", user.uid);
@@ -183,7 +184,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAccountScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CreateAccountScreen()));
         },
         child: Container(
           width: 130,
