@@ -156,7 +156,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-          handleSignIn();
+          Fluttertoast.showToast(msg: "Sorry!! Not working at the moment");
+          // handleSignIn();
         },
         child: Container(
           height: 50,

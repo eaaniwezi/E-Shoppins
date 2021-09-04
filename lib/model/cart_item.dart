@@ -9,7 +9,7 @@ class CartItemModel {
 
   String? _id;
   String? _name;
-  List<dynamic>? _images;
+  dynamic _images;
   String? _productId;
   String? _size;
   String? _color;
@@ -20,7 +20,7 @@ class CartItemModel {
 
   String? get name => _name;
 
-  List<dynamic>? get image => _images;
+  dynamic get images => _images;
 
   String? get productId => _productId;
 

@@ -16,11 +16,11 @@ enum Status {
 }
 
 class UserProvider with ChangeNotifier {
-  FirebaseAuth? _firebaseAuth;
   User? _user;
+  UserModel? _userModel;
+  FirebaseAuth? _firebaseAuth;
   Status _status = Status.Uninitialized;
   UserServices _userServices = UserServices();
-  UserModel? _userModel;
 
   Status get status => _status;
   User? get user => _user;
@@ -103,8 +103,19 @@ class UserProvider with ChangeNotifier {
     return Future.delayed(Duration.zero);
   }
 
+  Future<bool> removeFromCart({CartItemModel? cartItem}) async {
+    print("THE PRODUCT IS: ${cartItem.toString()}");
+    try {
+      _userServices.removeFromCart(userId: _user!.uid, cartItem: cartItem);
+      return true;
+    } catch (e) {
+      print("THE ERROR ${e.toString()}");
+      return false;
+    }
+  }
+
   Future<bool> addToCart(
-      {ProductModel? product, String? size, String? color}) async {
+      {required ProductModel product, String? size, String? color}) async {
     try {
       var uuid = Uuid();
       String cartItemId = uuid.v4();
@@ -112,8 +123,8 @@ class UserProvider with ChangeNotifier {
 
       Map cartItem = {
         "id": cartItemId,
-        "name": product!.name,
-        "image": product.pictures,
+        "name": product.name,
+        "images": product.pictures![0],
         "productId": product.id,
         "price": product.price,
         "size": size,
@@ -129,7 +140,7 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-   Future<void> reloadUserModel()async{
+  Future<void> reloadUserModel() async {
     _userModel = await _userServices.getUserById(user!.uid);
     notifyListeners();
   }

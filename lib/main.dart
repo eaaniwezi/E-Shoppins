@@ -16,13 +16,11 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: Firebase.initializeApp(),
         builder: (context, snapshot) {
-          // Check for errors
           if (snapshot.hasError) {
             return Container(
               child: Text(

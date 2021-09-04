@@ -150,7 +150,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget googleLogin() {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Fluttertoast.showToast(msg: "Sorry!! Not working at the moment");
+      },
       child: Container(
         width: 120,
         height: 45.0,
@@ -200,11 +202,15 @@ class _LoginScreenState extends State<LoginScreen> {
           if (_globalkey.currentState!.validate()) {
             if (!await user.signIn(_email.text, _password.text)) {
               Fluttertoast.showToast(msg: "Error sign in");
+              setState(() {
+                circular = false;
+              });
+            } else {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                  (route) => false);
             }
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-                (route) => false);
           } else {
             setState(() {
               circular = false;
@@ -250,8 +256,10 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.only(top: 15.0, left: 20.0),
       child: InkWell(
         onTap: () {
-          Fluttertoast.showToast(msg: "Why did you forget your password, Ode!!");
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
+          Fluttertoast.showToast(
+              msg: "Why did you forget your password, Ode!!");
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
         },
         child: Text(
           'Forgot Password',

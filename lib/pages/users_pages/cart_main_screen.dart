@@ -19,7 +19,104 @@ class _CartMainScreenState extends State<CartMainScreen> {
     final appProvider = Provider.of<AppProvider>(context);
     return Scaffold(
       appBar: buildAppBar(),
+      bottomNavigationBar: checkOutCard(),
+      backgroundColor: Style.Colors.whiteColor,
       body: appProvider.isLoading ? LoadingWidget() : cartBody(),
+    );
+  }
+
+  Widget checkOutCard() {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: 15,
+        horizontal: 30,
+      ),
+      // height: 174,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, -15),
+            blurRadius: 20,
+            color: Color(0xFFDADADA).withOpacity(0.15),
+          )
+        ],
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(10),
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    color: Color(0xFFF5F6F9),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(Icons.receipt_long_rounded,
+                      color: Style.Colors.mainColor),
+                ),
+                Spacer(),
+                Text(
+                  "Add voucher code",
+                  style: TextStyle(color: Style.Colors.mainColor),
+                ),
+                const SizedBox(width: 10),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 12,
+                  color: Style.Colors.secondColor,
+                )
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text.rich(
+                  TextSpan(
+                    text: "Total:\n",
+                    children: [
+                      TextSpan(
+                        text: "\$337.15",
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                    width: 190,
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      // ignore: deprecated_member_use
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        color: Style.Colors.secondColor,
+                        onPressed: () {},
+                        child: Text(
+                          "Check Out",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Style.Colors.mainColor,
+                          ),
+                        ),
+                      ),
+                    )),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -27,6 +124,13 @@ class _CartMainScreenState extends State<CartMainScreen> {
     final userProvider = Provider.of<UserProvider>(context);
     final appProvider = Provider.of<AppProvider>(context);
 
+    return userProvider.userModel!.cart!.isEmpty
+        ? emptyCartContainer()
+        : cartContainer();
+  }
+
+  Widget cartContainer() {
+    final userProvider = Provider.of<UserProvider>(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: ListView.builder(
@@ -35,10 +139,13 @@ class _CartMainScreenState extends State<CartMainScreen> {
           return Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Dismissible(
-                key: Key(userProvider.userModel!.cart![index].name.toString()),
+                key: UniqueKey(),
+                // key: Key(userProvider.userModel!.cart![index].name.toString()),
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) {
                   setState(() {
+                    userProvider.removeFromCart(
+                        cartItem: userProvider.userModel!.cart![index]);
                     userProvider.userModel!.cart!.removeAt(index);
                   });
                 },
@@ -70,7 +177,9 @@ class _CartMainScreenState extends State<CartMainScreen> {
                             ),
                             child: FadeInImage.memoryNetwork(
                               placeholder: kTransparentImage,
-                              image:   userProvider.userModel!.cart![index].image![1],
+                              image: userProvider.userModel!.cart![index].images
+                                  .toString(),
+                              // image:   userProvider.userModel!.cart![index].images![1],
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -137,7 +246,39 @@ class _CartMainScreenState extends State<CartMainScreen> {
     );
   }
 
+  Widget emptyCartContainer() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              width: double.infinity,
+              height: 300,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                image: DecorationImage(
+                  image: AssetImage('images/image/cart.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              child: Text("You have no item in your cart!!"),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   AppBar buildAppBar() {
+    final userProvider = Provider.of<UserProvider>(context);
     return AppBar(
       centerTitle: true,
       elevation: 0,
@@ -157,7 +298,8 @@ class _CartMainScreenState extends State<CartMainScreen> {
             style: TextStyle(color: Colors.black),
           ),
           Text(
-            "3", // "${demoCarts.length} items",
+            userProvider.userModel!.cart!.length
+                .toString(), // "${demoCarts.length} items",
             style: Theme.of(context).textTheme.caption,
           ),
         ],

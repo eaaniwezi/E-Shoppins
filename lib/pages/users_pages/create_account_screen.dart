@@ -9,6 +9,7 @@ import 'package:ecommerce_app/database/users.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
 import 'package:ecommerce_app/pages/users_pages/login_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({Key? key}) : super(key: key);
@@ -379,6 +380,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
       // // Navigator.pop(context);
       // // return Fluttertoast.showToast(msg: "Failed in creating an account");
+      //  SharedPreferences prefs = await SharedPreferences.getInstance();
+      //  prefs.setString('name', _name.text);
+      //  prefs.setString('email', _email.text);
+      //  prefs.setString('password', _password.text);
       if (!await user.signUp(_name.text, _email.text, _password.text)) {
         Fluttertoast.showToast(msg: "Failed to create an account!!");
         return setState(() {
