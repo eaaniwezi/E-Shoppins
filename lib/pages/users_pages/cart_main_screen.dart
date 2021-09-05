@@ -17,10 +17,13 @@ class _CartMainScreenState extends State<CartMainScreen> {
   @override
   Widget build(BuildContext context) {
     final appProvider = Provider.of<AppProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: buildAppBar(),
       bottomNavigationBar: checkOutCard(),
-      backgroundColor: Style.Colors.whiteColor,
+      backgroundColor: userProvider.userModel!.cart!.isEmpty
+          ? Style.Colors.whiteColor
+          : Style.Colors.pinkColor,
       body: appProvider.isLoading ? LoadingWidget() : cartBody(),
     );
   }
@@ -185,53 +188,54 @@ class _CartMainScreenState extends State<CartMainScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 20),
+                      SizedBox(width: 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
                               Text(
-                                userProvider.userModel!.cart![index].name
+                                userProvider.userModel!.cart![index].name!
+                                    .toUpperCase()
                                     .toString(),
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 16),
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
                                 maxLines: 2,
                               ),
-                              // Container(
-                              //   margin: EdgeInsets.only(right: 2),
-                              //   padding: EdgeInsets.all(8),
-                              //   height: 25,
-                              //   width: 25,
-                              //   child: DecoratedBox(
-                              //     decoration: BoxDecoration(
-                              //       color: cart.cartproducts.colors[0],
-                              //       shape: BoxShape.circle,
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                           SizedBox(height: 10),
                           Text.rich(
                             TextSpan(
                               text:
-                                  "\$${userProvider.userModel!.cart![index].price}",
+                                  "\$${userProvider.userModel!.cart![index].price! / 100} \n\n",
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: Style.Colors.secondColor),
                               children: [
                                 TextSpan(
-                                    text:
-                                        " x${userProvider.userModel!.cart![index].size}",
+                                    text: "Size:  ",
                                     style:
                                         Theme.of(context).textTheme.bodyText1),
                                 TextSpan(
-                                  text: "   XL",
+                                  text:
+                                      "${userProvider.userModel!.cart![index].size}",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black),
-                                )
+                                      fontWeight: FontWeight.w600,
+                                      color: Style.Colors.secondColor),
+                                ),
+                                TextSpan(
+                                    text: "  Color:  ",
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1),
+                                TextSpan(
+                                  text:
+                                      "${userProvider.userModel!.cart![index].color}",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Style.Colors.secondColor),
+                                ),
                               ],
                             ),
                           )
@@ -298,8 +302,12 @@ class _CartMainScreenState extends State<CartMainScreen> {
             style: TextStyle(color: Colors.black),
           ),
           Text(
-            userProvider.userModel!.cart!.length
-                .toString(), // "${demoCarts.length} items",
+            userProvider.userModel!.cart!.length == 0
+                ? ""
+                : userProvider.userModel!.cart!.length == 1
+                    ? "${userProvider.userModel!.cart!.length} item"
+                    : "${userProvider.userModel!.cart!.length} items"
+                        .toString(), // "${demoCarts.length} items",
             style: Theme.of(context).textTheme.caption,
           ),
         ],

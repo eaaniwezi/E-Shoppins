@@ -1,6 +1,8 @@
 import 'package:ecommerce_app/home_page.dart';
+import 'package:ecommerce_app/model/cart_item.dart';
 import 'package:ecommerce_app/pages/users_pages/create_account_screen.dart';
 import 'package:ecommerce_app/pages/users_pages/login_screen.dart';
+import 'package:ecommerce_app/services/user_services.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,13 +22,14 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final GoogleSignIn googleSignIn = new GoogleSignIn();
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  UserServices _userServices = UserServices();
 
-  late final User user;
+  User? user;
   // late final O
 
-  late SharedPreferences preferences;
-  late bool loading;
-  late bool isLogedin;
+  SharedPreferences? preferences;
+  bool? loading;
+  bool? isLogedin;
 
   @override
   void initState() {
@@ -71,32 +74,44 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     if (user != null) {
       final QuerySnapshot result = await FirebaseFirestore.instance
           .collection("users")
-          .where("id", isEqualTo: user.uid)
+          .where("id", isEqualTo: user!.uid)
           .get();
       final List<DocumentSnapshot> documents = result.docs;
 
       if (documents.length == 0) {
-        FirebaseFirestore.instance.collection("users").doc(user.uid).set({
-          "uid": user.uid,
-          "name": user.displayName,
-          "email": user.email,
-          "profilePicture": user.photoURL,
-          "phoneNumber": user.phoneNumber,
+        // FirebaseFirestore.instance.collection("users").doc(user!.uid).set({
+        //   "uid": user!.uid,
+        //   "name": user!.displayName,
+        //   "email": user!.email,
+        //   "profilePicture": user!.photoURL,
+        //   "phoneNumber": user!.phoneNumber,
+        //   "stripeId": "",
+        //   "cart": [],
+        // });
+        _userServices.createUser({
+          "uid": user!.uid,
+          "name": user!.displayName,
+          "email": user!.email,
+          // "profilePicture": user!.photoURL,
+          // "phoneNumber": user!.phoneNumber,
           "stripeId": "",
-          "cart": [],
+          "cart": []
         });
 
-        await preferences.setString("id", user.uid);
-        await preferences.setString("username", user.displayName.toString());
-        await preferences.setString("email", user.email.toString());
-        await preferences.setString("profilePicture", user.photoURL.toString());
-        await preferences.setString("phoneNumber", user.phoneNumber.toString());
+        await preferences!.setString("id", user!.uid);
+        await preferences!.setString("username", user!.displayName.toString());
+        await preferences!.setString("email", user!.email.toString());
+        // await preferences!
+        //     .setString("profilePicture", user!.photoURL.toString());
+        // await preferences!
+        //     .setString("phoneNumber", user!.phoneNumber.toString());
       } else {
-        await preferences.setString("id", documents[0]['id']);
-        await preferences.setString("username", documents[0]['username']);
-        await preferences.setString("email", documents[0]['email']);
-        await preferences.setString("photoURL", documents[0]['photoURL']);
-        await preferences.setString("phoneNumber", documents[0]['phoneNumber']);
+        await preferences!.setString("id", documents[0]['id']);
+        await preferences!.setString("username", documents[0]['username']);
+        await preferences!.setString("email", documents[0]['email']);
+        // await preferences!.setString("photoURL", documents[0]['photoURL']);
+        // await preferences!
+        //     .setString("phoneNumber", documents[0]['phoneNumber']);
       }
       Fluttertoast.showToast(msg: "Succesful");
       setState(() {
@@ -156,8 +171,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-          Fluttertoast.showToast(msg: "Sorry!! Not working at the moment");
-          // handleSignIn();
+          // Fluttertoast.showToast(msg: "Sorry!! Not working at the moment");
+          handleSignIn();
         },
         child: Container(
           height: 50,

@@ -46,15 +46,57 @@ class _HomePageState extends State<HomePage>
                 Icons.search,
                 color: Colors.white,
               )),
-          new IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CartMainScreen()));
-              },
-              icon: Icon(
-                Icons.shopping_cart_outlined,
-                color: Colors.white,
-              )),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CartMainScreen()));
+                },
+                child: Stack(
+                  children: <Widget>[
+                    new Icon(
+                      Icons.shopping_cart_outlined,
+                    ),
+                    new Positioned(
+                      right: 0,
+                      child: new Container(
+                        padding: EdgeInsets.all(1),
+                        decoration: new BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 12,
+                          minHeight: 12,
+                        ),
+                        child: new Text(
+                          '${userProvider.userModel!.cart!.length}',
+                          style: new TextStyle(
+                            color: Colors.white,
+                            fontSize: 8,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // new IconButton(
+          //     onPressed: () {
+          //       Navigator.push(context,
+          //           MaterialPageRoute(builder: (context) => CartMainScreen()));
+          //     },
+          //     icon: Icon(
+          //       Icons.shopping_cart_outlined,
+          //       color: Colors.white,
+          //     )),
         ],
       ),
       drawer: new Drawer(

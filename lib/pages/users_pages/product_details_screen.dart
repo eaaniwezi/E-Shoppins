@@ -1,15 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:ecommerce_app/home_page.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ecommerce_app/model/product.dart';
+import 'package:ecommerce_app/style/theme.dart' as Style;
+import 'package:transparent_image/transparent_image.dart';
+import 'package:ecommerce_app/widgets/loading_widget.dart';
+import 'package:ecommerce_app/pages/users_pages/cart_main_screen.dart';
 import 'package:ecommerce_app/providers/users_providers/app_providers.dart';
 import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
-import 'package:ecommerce_app/widgets/loading_widget.dart';
-import 'package:flutter/material.dart';
-
-import 'package:ecommerce_app/home_page.dart';
-import 'package:ecommerce_app/model/product.dart';
-import 'package:ecommerce_app/pages/users_pages/cart_screen.dart';
-import 'package:ecommerce_app/style/theme.dart' as Style;
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final ProductModel product;
@@ -32,7 +31,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _color = widget.product.colors![0];
     _size = widget.product.sizes![0];
@@ -318,13 +316,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   product: widget.product, color: _color, size: _size);
               if (successfullyAddedCart) {
                 Fluttertoast.showToast(msg: "Thanks for Carting me!");
-                 userProvider.reloadUserModel();
+                userProvider.reloadUserModel();
               } else {
                 Fluttertoast.showToast(msg: "Error adding to cart");
               }
               appProvider.changeIsLoading();
             },
-            child: appProvider.isLoading 
+            child: appProvider.isLoading
                 ? LoadingWidget()
                 : Text(
                     "Add To Cart",
@@ -391,6 +389,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   _appBar() {
+     final userProvider = Provider.of<UserProvider>(context);
     return AppBar(
       elevation: 0,
       title: InkWell(
@@ -403,12 +402,54 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       backgroundColor: Style.Colors.mainColor,
       actions: [
         // new IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-        new IconButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CartScreen()));
-            },
-            icon: Icon(Icons.shopping_cart_outlined)),
+        // new IconButton(
+        //     onPressed: () {
+        //       Navigator.push(context,
+        //           MaterialPageRoute(builder: (context) => CartMainScreen()));
+        //     },
+        //     icon: Icon(Icons.shopping_cart_outlined)),
+           Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CartMainScreen()));
+                },
+                child: Stack(
+                  children: <Widget>[
+                    new Icon(
+                      Icons.shopping_cart_outlined,
+                    ),
+                    new Positioned(
+                      right: 0,
+                      child: new Container(
+                        padding: EdgeInsets.all(1),
+                        decoration: new BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 12,
+                          minHeight: 12,
+                        ),
+                        child: new Text(
+                          '${userProvider.userModel!.cart!.length}',
+                          style: new TextStyle(
+                            color: Colors.white,
+                            fontSize: 8,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
       ],
       leading: IconButton(
           onPressed: () {

@@ -3,6 +3,7 @@ import 'package:ecommerce_app/model/cart_item.dart';
 import 'package:ecommerce_app/model/product.dart';
 import 'package:ecommerce_app/model/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ecommerce_app/services/user_services.dart';
@@ -21,6 +22,7 @@ class UserProvider with ChangeNotifier {
   FirebaseAuth? _firebaseAuth;
   Status _status = Status.Uninitialized;
   UserServices _userServices = UserServices();
+  final storage = new FlutterSecureStorage();
 
   Status get status => _status;
   User? get user => _user;
@@ -28,6 +30,14 @@ class UserProvider with ChangeNotifier {
 
   UserProvider.initialize() : _firebaseAuth = FirebaseAuth.instance {
     _firebaseAuth!.authStateChanges().listen(_onStateChanged);
+  }
+
+    void storeTokenAndData(UserCredential userCredential) async {
+    print("storing token and data");
+    await storage.write(
+        key: "token", value: userCredential.credential!.token.toString());
+    await storage.write(
+        key: "usercredential", value: userCredential.toString());
   }
 
   Future<bool> signIn(String email, String password) async {
@@ -107,10 +117,10 @@ class UserProvider with ChangeNotifier {
     print("THE PRODUCT IS: ${cartItem.toString()}");
     try {
       _userServices.removeFromCart(userId: _user!.uid, cartItem: cartItem);
-      return true;
+  notifyListeners();    return true;
     } catch (e) {
       print("THE ERROR ${e.toString()}");
-      return false;
+    notifyListeners();  return false;
     }
   }
 
@@ -133,9 +143,11 @@ class UserProvider with ChangeNotifier {
       CartItemModel item = CartItemModel.fromMap(cartItem);
       print("CART ITEMS ARE: ${cart!.toList().toString()}");
       _userServices.addToCart(userId: _user!.uid, cartItem: item);
+      notifyListeners();
       return true;
     } catch (e) {
       print("THE ERROR ${e.toString()}");
+      notifyListeners();
       return false;
     }
   }
@@ -157,6 +169,10 @@ class UserProvider with ChangeNotifier {
       print(_userModel!.cart!.length);
       print(_userModel!.cart!.length);
       _status = Status.Authenticated;
+      if (_status.index == 2)
+      {
+        print("this is my state $_status");
+      }
     }
     notifyListeners();
   }
