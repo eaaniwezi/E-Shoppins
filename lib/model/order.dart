@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OrderModel {
   final String? id, description, userId, status;
-  final int? createdAt, total;
+  final int? createdAt, totalPrice;
   List? cart;
 
   OrderModel({
@@ -11,7 +11,7 @@ class OrderModel {
     this.userId,
     this.status,
     this.createdAt,
-    this.total,
+    this.totalPrice,
     this.cart,
   });
 
@@ -22,7 +22,7 @@ class OrderModel {
       userId: snapshot['userId'],
       status: snapshot['status'],
       createdAt: snapshot['createdAt'],
-      total: snapshot['total'],
+      totalPrice: snapshot['totalPrice'],
       cart: snapshot['cart'],
     );
   }

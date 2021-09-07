@@ -123,7 +123,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               child: Row(
                 children: [
                   Text(
-                    _maxLines == 3 ? "See More Details" :  _maxLines < 3 ? "" : "See Less Details",
+                    _maxLines == 3 ? "See More Details" : "See Less Details",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Style.Colors.secondColor,
@@ -176,10 +176,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           color: Style.Colors.secondColor,
                         ),
                       ),
-                      Text(
-                        widget.product.quantity.toString()
-                        // "${widget.product.quantity!.toDouble()}",
-                      ),
+                      Text(widget.product.quantity.toString()
+                          // "${widget.product.quantity!.toDouble()}",
+                          ),
                     ],
                   ),
                 ),
