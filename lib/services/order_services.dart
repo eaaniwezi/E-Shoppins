@@ -12,7 +12,7 @@ class OrderServices {
       description,
       status,
       List<CartItemModel>? cart,
-      int? totalPrice}) {
+      num? totalPrice}) {
     List<Map> convertedCart = [];
 
     for (CartItemModel item in cart!) {

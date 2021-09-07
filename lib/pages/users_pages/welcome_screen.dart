@@ -28,8 +28,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   // late final O
 
   SharedPreferences? preferences;
-  bool? loading;
-  bool? isLogedin;
+  late bool loading;
+  late bool isLogedin;
 
   @override
   void initState() {

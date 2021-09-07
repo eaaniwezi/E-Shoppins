@@ -108,6 +108,7 @@ class ProductModel {
     _description = snapshot[DESCRIPTION] ?? " ";
     _featured = snapshot[FEATURED];
     _price = snapshot[PRICE].floor();
+    _quantity = snapshot[QUANTITY];
     _category = snapshot[CATEGORY];
     _colors = snapshot[COLORS];
     _sizes = snapshot[SIZES];

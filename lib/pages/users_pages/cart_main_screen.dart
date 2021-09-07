@@ -1,10 +1,14 @@
+import 'package:ecommerce_app/model/cart_item.dart';
 import 'package:ecommerce_app/providers/users_providers/app_providers.dart';
 import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
+import 'package:ecommerce_app/services/order_services.dart';
 import 'package:ecommerce_app/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:uuid/uuid.dart';
 
 class CartMainScreen extends StatefulWidget {
   const CartMainScreen({Key? key}) : super(key: key);
@@ -14,13 +18,17 @@ class CartMainScreen extends StatefulWidget {
 }
 
 class _CartMainScreenState extends State<CartMainScreen> {
+  OrderServices _orderServices = OrderServices();
+  GlobalKey<FormState> _formKey = GlobalKey();
+  TextEditingController _orderSummaryController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final appProvider = Provider.of<AppProvider>(context);
     final userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: buildAppBar(),
-      bottomNavigationBar: checkOutCard(),
+      bottomNavigationBar:
+          userProvider.userModel!.cart!.isEmpty ? Text("") : checkOutCard(),
       backgroundColor: userProvider.userModel!.cart!.isEmpty
           ? Style.Colors.whiteColor
           : Style.Colors.pinkColor,
@@ -29,6 +37,7 @@ class _CartMainScreenState extends State<CartMainScreen> {
   }
 
   Widget checkOutCard() {
+    final userProvider = Provider.of<UserProvider>(context);
     return Container(
       padding: EdgeInsets.symmetric(
         vertical: 15,
@@ -54,31 +63,36 @@ class _CartMainScreenState extends State<CartMainScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(10),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF5F6F9),
-                    borderRadius: BorderRadius.circular(10),
+            InkWell(
+              onTap: () {
+                Fluttertoast.showToast(msg: "No code available at the moment");
+              },
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFF5F6F9),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(Icons.receipt_long_rounded,
+                        color: Style.Colors.mainColor),
                   ),
-                  child: Icon(Icons.receipt_long_rounded,
-                      color: Style.Colors.mainColor),
-                ),
-                Spacer(),
-                Text(
-                  "Add voucher code",
-                  style: TextStyle(color: Style.Colors.mainColor),
-                ),
-                const SizedBox(width: 10),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 12,
-                  color: Style.Colors.secondColor,
-                )
-              ],
+                  Spacer(),
+                  Text(
+                    "Add voucher code",
+                    style: TextStyle(color: Style.Colors.mainColor),
+                  ),
+                  const SizedBox(width: 10),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 12,
+                    color: Style.Colors.secondColor,
+                  )
+                ],
+              ),
             ),
             SizedBox(height: 20),
             Row(
@@ -89,7 +103,9 @@ class _CartMainScreenState extends State<CartMainScreen> {
                     text: "Total:\n",
                     children: [
                       TextSpan(
-                        text: "\$337.15",
+                        // text: "\$337.15",
+                        text:
+                            " \$${userProvider.userModel!.totalCartPrice! / 100}",
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     ],
@@ -105,7 +121,9 @@ class _CartMainScreenState extends State<CartMainScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
                         color: Style.Colors.secondColor,
-                        onPressed: () {},
+                        onPressed: () {
+                          _showSummaryContainer();
+                        },
                         child: Text(
                           "Check Out",
                           style: TextStyle(
@@ -120,6 +138,150 @@ class _CartMainScreenState extends State<CartMainScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  _showSummaryContainer() {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          child: Container(
+            height: 250,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Order Summary'),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'You will be charged \$${userProvider.userModel!.totalCartPrice! / 100} upon delivery!',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        border: Border.all(
+                            color: Style.Colors.mainColor,
+                            style: BorderStyle.solid,
+                            width: 1.0),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: TextFormField(
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Style.Colors.mainColor,
+                            fontSize: 15,
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Can't be empty";
+                            } else if (value.length > 25) {
+                              return "Cant be more than 25 letters";
+                            } else
+                              return null;
+                          },
+                          controller: _orderSummaryController,
+                          decoration: InputDecoration(
+                            labelText:
+                                '  Leave a short description for your order',
+                            labelStyle: TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400,
+                              color: Style.Colors.mainColor,
+                            ),
+                            border: InputBorder.none,
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Style.Colors.mainColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: InkWell(
+                          onTap: () async {
+                            if (_formKey.currentState!.validate()) {
+                              var uuid = Uuid();
+                              String id = uuid.v4();
+                              _orderServices.createOrder(
+                                  userId: userProvider.user!.uid,
+                                  id: id,
+                                  description: _orderSummaryController.text,
+                                  status: "complete",
+                                  totalPrice:
+                                      userProvider.userModel!.totalCartPrice,
+                                  cart: userProvider.userModel!.cart);
+                              for (CartItemModel cartItem 
+                                  in userProvider
+                                      .userModel!.cart ?? [] ) {
+                                bool value = await userProvider
+                                    .removeFromCart(
+                                        cartItem: cartItem);
+                                if (value) {
+                                  userProvider.reloadUserModel();
+                                  print("Item added to cart");
+                                 Fluttertoast.showToast(msg: "Removed from Cart");
+                                } else {
+                                  print("ITEM WAS NOT REMOVED");
+                                }
+                              }
+                              Fluttertoast.showToast(msg: "Succeffuly Ordered");
+                              Navigator.pop(context);
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Just add a short descrption!!");
+                            }
+                          },
+                          child: Container(
+                            height: 30,
+                            width: 70,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Style.Colors.greenColor,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Continue",
+                                style: TextStyle(
+                                  color: Style.Colors.whiteColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -149,6 +311,9 @@ class _CartMainScreenState extends State<CartMainScreen> {
                   setState(() {
                     userProvider.removeFromCart(
                         cartItem: userProvider.userModel!.cart![index]);
+                    userProvider.reloadUserModel();
+                    Fluttertoast.showToast(
+                        msg: "Succesfully removed an item from your cart");
                     userProvider.userModel!.cart!.removeAt(index);
                   });
                 },

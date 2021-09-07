@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/pages/users_pages/cart_main_screen.dart';
+import 'package:ecommerce_app/pages/users_pages/order_screen.dart';
 import 'package:ecommerce_app/providers/users_providers/product_providers.dart';
 import 'package:ecommerce_app/services/products_services.dart';
 import 'package:ecommerce_app/widgets/featured_products.dart';
@@ -150,7 +151,7 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _drawerChildren() {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context);
     return new ListView(
       children: [
         new UserAccountsDrawerHeader(
@@ -171,7 +172,9 @@ class _HomePageState extends State<HomePage>
           ),
         ),
         InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context);
+            },
             child: ListTile(
                 title: Text("Home Page"),
                 leading: Icon(Icons.home, color: Style.Colors.secondColor))),
@@ -181,7 +184,11 @@ class _HomePageState extends State<HomePage>
                 title: Text("My Account"),
                 leading: Icon(Icons.person, color: Style.Colors.secondColor))),
         InkWell(
-            onTap: () {},
+            onTap: () async {
+              await userProvider.getOrders();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => OrderScreen()));
+            },
             child: ListTile(
                 title: Text("My Orders"),
                 leading: Icon(Icons.shopping_cart_rounded,

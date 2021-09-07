@@ -72,27 +72,27 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              padding: EdgeInsets.all(15),
-              width: 64,
-              decoration: BoxDecoration(
-                color: Color(0xFFFFE6E6),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomLeft: Radius.circular(20),
-                ),
-              ),
-              child: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.favorite_border,
-                  color: Style.Colors.secondColor,
-                ),
-              ),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.centerRight,
+          //   child: Container(
+          //     padding: EdgeInsets.all(15),
+          //     width: 64,
+          //     decoration: BoxDecoration(
+          //       color: Color(0xFFFFE6E6),
+          //       borderRadius: BorderRadius.only(
+          //         topLeft: Radius.circular(20),
+          //         bottomLeft: Radius.circular(20),
+          //       ),
+          //     ),
+          //     child: IconButton(
+          //       onPressed: () {},
+          //       icon: Icon(
+          //         Icons.favorite_border,
+          //         color: Style.Colors.secondColor,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Padding(
             padding: EdgeInsets.only(
               left: 20,
@@ -123,7 +123,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               child: Row(
                 children: [
                   Text(
-                    _maxLines == 3 ? "See More Details" : "See Less Details",
+                    _maxLines == 3 ? "See More Details" :  _maxLines < 3 ? "" : "See Less Details",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Style.Colors.secondColor,
@@ -148,7 +148,41 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 // _productSize(),
                 // _productsColors(),
                 // Text(widget.product.colors.toString()),
-
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Price: ",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Style.Colors.secondColor,
+                        ),
+                      ),
+                      Text(
+                        "\$${widget.product.price! / 100}",
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Quantity left: ",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Style.Colors.secondColor,
+                        ),
+                      ),
+                      Text(
+                        widget.product.quantity.toString()
+                        // "${widget.product.quantity!.toDouble()}",
+                      ),
+                    ],
+                  ),
+                ),
                 _selectColor(),
                 _selectSize(),
                 _addToCart(),
@@ -389,7 +423,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   _appBar() {
-     final userProvider = Provider.of<UserProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
     return AppBar(
       elevation: 0,
       title: InkWell(
@@ -408,48 +442,46 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         //           MaterialPageRoute(builder: (context) => CartMainScreen()));
         //     },
         //     icon: Icon(Icons.shopping_cart_outlined)),
-           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CartMainScreen()));
-                },
-                child: Stack(
-                  children: <Widget>[
-                    new Icon(
-                      Icons.shopping_cart_outlined,
-                    ),
-                    new Positioned(
-                      right: 0,
-                      child: new Container(
-                        padding: EdgeInsets.all(1),
-                        decoration: new BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        constraints: BoxConstraints(
-                          minWidth: 12,
-                          minHeight: 12,
-                        ),
-                        child: new Text(
-                          '${userProvider.userModel!.cart!.length}',
-                          style: new TextStyle(
-                            color: Colors.white,
-                            fontSize: 8,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CartMainScreen()));
+              },
+              child: Stack(
+                children: <Widget>[
+                  new Icon(
+                    Icons.shopping_cart_outlined,
+                  ),
+                  new Positioned(
+                    right: 0,
+                    child: new Container(
+                      padding: EdgeInsets.all(1),
+                      decoration: new BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                    )
-                  ],
-                ),
+                      constraints: BoxConstraints(
+                        minWidth: 12,
+                        minHeight: 12,
+                      ),
+                      child: new Text(
+                        '${userProvider.userModel!.cart!.length}',
+                        style: new TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),
+        ),
       ],
       leading: IconButton(
           onPressed: () {

@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget loginButton() {
-    final user = Provider.of<UserProvider>(context, listen: false);
+    final user = Provider.of<UserProvider>(context);
     return GestureDetector(
       onTap: () async {
         setState(() {

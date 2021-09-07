@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:ecommerce_app/model/cart_item.dart';
+import 'package:ecommerce_app/model/order.dart';
 import 'package:ecommerce_app/model/product.dart';
 import 'package:ecommerce_app/model/user.dart';
+import 'package:ecommerce_app/services/order_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -22,17 +24,19 @@ class UserProvider with ChangeNotifier {
   FirebaseAuth? _firebaseAuth;
   Status _status = Status.Uninitialized;
   UserServices _userServices = UserServices();
+  OrderServices _orderServices = OrderServices();
   final storage = new FlutterSecureStorage();
 
-  Status get status => _status;
   User? get user => _user;
+  List<OrderModel> orders = [];
+  Status get status => _status;
   UserModel? get userModel => _userModel;
 
   UserProvider.initialize() : _firebaseAuth = FirebaseAuth.instance {
     _firebaseAuth!.authStateChanges().listen(_onStateChanged);
   }
 
-    void storeTokenAndData(UserCredential userCredential) async {
+  void storeTokenAndData(UserCredential userCredential) async {
     print("storing token and data");
     await storage.write(
         key: "token", value: userCredential.credential!.token.toString());
@@ -117,10 +121,12 @@ class UserProvider with ChangeNotifier {
     print("THE PRODUCT IS: ${cartItem.toString()}");
     try {
       _userServices.removeFromCart(userId: _user!.uid, cartItem: cartItem);
-  notifyListeners();    return true;
+      notifyListeners();
+      return true;
     } catch (e) {
       print("THE ERROR ${e.toString()}");
-    notifyListeners();  return false;
+      notifyListeners();
+      return false;
     }
   }
 
@@ -152,6 +158,11 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  getOrders() async {
+    orders = await _orderServices.getUserOrders(userId: _user!.uid);
+    notifyListeners();
+  }
+
   Future<void> reloadUserModel() async {
     _userModel = await _userServices.getUserById(user!.uid);
     notifyListeners();
@@ -166,11 +177,8 @@ class UserProvider with ChangeNotifier {
       _userModel = await _userServices.getUserById(user.uid);
       print(_userModel!.cart!.length);
       print(_userModel!.cart!.length);
-      print(_userModel!.cart!.length);
-      print(_userModel!.cart!.length);
       _status = Status.Authenticated;
-      if (_status.index == 2)
-      {
+      if (_status.index == 2) {
         print("this is my state $_status");
       }
     }

@@ -1,10 +1,6 @@
-import 'package:ecommerce_app/pages/users_pages/cart_main_screen.dart';
-import 'package:ecommerce_app/pages/users_pages/forgot_%20password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'pages/admin_pages/admin_home_screen.dart';
-import 'pages/admin_pages/admin_add_product_screen.dart';
 import 'package:ecommerce_app/pages/users_pages/welcome_screen.dart';
 import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
 import 'package:ecommerce_app/providers/users_providers/app_providers.dart';

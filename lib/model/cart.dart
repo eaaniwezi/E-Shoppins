@@ -1,16 +1,19 @@
-import 'package:ecommerce_app/model/popular_products.dart';
+// MODEL NO LONGER IN USE
 
-class Cart {
-  final PopularProducts cartproducts;
-  final int numOfItem;
 
-  Cart({required this.cartproducts, required this.numOfItem});
-}
+// import 'package:ecommerce_app/model/popular_products.dart';
 
-List<Cart> demoCarts = [
-  Cart(cartproducts: popularProducts[0], numOfItem: 2),
-  Cart(cartproducts: popularProducts[1], numOfItem: 1),
-  Cart(cartproducts: popularProducts[3], numOfItem: 1),
-  Cart(cartproducts: popularProducts[1], numOfItem: 1),
-  Cart(cartproducts: popularProducts[3], numOfItem: 1),
-];
+// class Cart {
+//   final PopularProducts cartproducts;
+//   final int numOfItem;
+
+//   Cart({required this.cartproducts, required this.numOfItem});
+// }
+
+// List<Cart> demoCarts = [
+//   Cart(cartproducts: popularProducts[0], numOfItem: 2),
+//   Cart(cartproducts: popularProducts[1], numOfItem: 1),
+//   Cart(cartproducts: popularProducts[3], numOfItem: 1),
+//   Cart(cartproducts: popularProducts[1], numOfItem: 1),
+//   Cart(cartproducts: popularProducts[3], numOfItem: 1),
+// ];
