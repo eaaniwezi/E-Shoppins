@@ -1,20 +1,12 @@
 import 'package:ecommerce_app/pages/users_pages/cart_main_screen.dart';
-import 'package:ecommerce_app/pages/users_pages/order_screen.dart';
-import 'package:ecommerce_app/providers/users_providers/product_providers.dart';
-import 'package:ecommerce_app/services/products_services.dart';
 import 'package:ecommerce_app/widgets/drawer_children.dart';
 import 'package:ecommerce_app/widgets/featured_products.dart';
-import 'package:ecommerce_app/widgets/single_product_gridView.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:page_indicator/page_indicator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
 import 'package:ecommerce_app/widgets/recent_products.dart';
 import 'package:ecommerce_app/widgets/horizontal_list.dart';
-import 'package:ecommerce_app/pages/users_pages/cart_screen.dart';
-import 'package:ecommerce_app/pages/users_pages/welcome_screen.dart';
 import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
 
 class HomePage extends StatefulWidget {

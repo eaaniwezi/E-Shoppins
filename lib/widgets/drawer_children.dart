@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/pages/users_pages/profile_screen.dart';
 import 'package:ecommerce_app/pages/users_pages/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,7 @@ class DrawerChildren extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-  final GoogleSignIn googleSignIn = new GoogleSignIn();
+    final GoogleSignIn googleSignIn = new GoogleSignIn();
     final userProvider = Provider.of<UserProvider>(context);
     return new ListView(
       children: [
@@ -42,7 +42,10 @@ class DrawerChildren extends StatelessWidget {
                 title: Text("Home Page"),
                 leading: Icon(Icons.home, color: Style.Colors.secondColor))),
         InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ProfileScreen()));
+            },
             child: ListTile(
                 title: Text("My Account"),
                 leading: Icon(Icons.person, color: Style.Colors.secondColor))),

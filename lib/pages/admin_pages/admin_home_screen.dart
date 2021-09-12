@@ -162,7 +162,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     ListTile(
                       title: Text(
                         "7",
-                        style: Theme.of(context).textTheme.display1!.copyWith(
+                        style: Theme.of(context).textTheme.headline4!.copyWith(
                               color: Style.Colors.whiteColor,
                               fontSize: 24.0,
                             ),
@@ -194,7 +194,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     ListTile(
                       title: Text(
                         "\$750",
-                        style: Theme.of(context).textTheme.display1!.copyWith(
+                        style: Theme.of(context).textTheme.headline4!.copyWith(
                               color: Style.Colors.whiteColor,
                               fontSize: 24.0,
                             ),
@@ -232,7 +232,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     ListTile(
                       title: Text(
                         "0",
-                        style: Theme.of(context).textTheme.display1!.copyWith(
+                        style: Theme.of(context).textTheme.headline4!.copyWith(
                               color: Style.Colors.whiteColor,
                               fontSize: 24.0,
                             ),
@@ -267,7 +267,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         style: Theme.of(context)
                             .textTheme
                             // ignore: deprecated_member_use
-                            .display1!
+                            .headline4!
                             .copyWith(
                               fontSize: 24.0,
                               color: Style.Colors.mainColor,
@@ -312,7 +312,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     ListTile(
                       title: Text(
                         "7",
-                        style: Theme.of(context).textTheme.display1!.copyWith(
+                        style: Theme.of(context).textTheme.headline4!.copyWith(
                               color: Style.Colors.whiteColor,
                               fontSize: 24.0,
                             ),
@@ -382,7 +382,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     ListTile(
                       title: Text(
                         "15",
-                        style: Theme.of(context).textTheme.display1!.copyWith(
+                        style: Theme.of(context).textTheme.headline4!.copyWith(
                               color: Style.Colors.whiteColor,
                               fontSize: 24.0,
                             ),

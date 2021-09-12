@@ -29,11 +29,14 @@ class OrderServices {
       "status": status,
     });
   }
+  DateTime _now = DateTime.now();
 
   Future<List<OrderModel>> getUserOrders({String? userId}) async =>
+  
       _firebaseFirestore
           .collection(collection)
           .where("userId", isEqualTo: userId)
+          // .where("createdAt", isGreaterThanOrEqualTo: _now)
           .get()
           .then((result) {
         List<OrderModel> orders = [];
