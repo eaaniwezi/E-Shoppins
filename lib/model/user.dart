@@ -43,20 +43,27 @@ class UserModel {
   static const ID = "uid";
   static const NAME = "name";
   static const EMAIL = "email";
+  static const PROFILEPICTURE = "profilePicture";
+  static const PHONENUMBER = "phoneNumber";
+  static const ADDRESS = "address";
   static const STRIPE_ID = "stripeId";
   static const CART = "cart";
 
   String? _name;
   String? _email;
+  String? _profilePicture;
+  String? _phoneNumber;
+  String? _address;
   String? _id;
   String? _stripeId;
   num _priceSum = 0;
 
 //  getters
   String? get name => _name;
-
   String? get email => _email;
-
+  String? get profilePicture => _profilePicture;
+  String? get phoneNumber => _phoneNumber;
+  String? get address => _address;
   String? get id => _id;
 
   String? get stripeId => _stripeId;
@@ -68,6 +75,9 @@ class UserModel {
   UserModel.fromSnapshot(DocumentSnapshot snapshot) {
     _name = snapshot[NAME];
     _email = snapshot[EMAIL];
+    _profilePicture = snapshot[PROFILEPICTURE];
+    _phoneNumber = snapshot[PHONENUMBER];
+    _address = snapshot[ADDRESS];
     _id = snapshot[ID];
     _stripeId = snapshot[STRIPE_ID] ?? "";
     cart = _convertCartItems(snapshot[CART] ?? []);

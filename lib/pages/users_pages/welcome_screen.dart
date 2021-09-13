@@ -92,8 +92,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           "uid": user!.uid,
           "name": user!.displayName,
           "email": user!.email,
-          // "profilePicture": user!.photoURL,
-          // "phoneNumber": user!.phoneNumber,
+          "address": "",
+          "profilePicture": user!.photoURL,
+          "phoneNumber":'',
           "stripeId": "",
           "cart": []
         });

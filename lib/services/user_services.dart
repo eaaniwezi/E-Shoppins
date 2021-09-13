@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/cart_item.dart';
 import 'package:ecommerce_app/model/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class UserServices {
@@ -15,6 +16,20 @@ class UserServices {
           .set(data);
       print('Successfully created');
       Fluttertoast.showToast(msg: "Successfully created");
+    } catch (e) {
+      print(e.toString());
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  updateUsers(Map<String, dynamic> data) async {
+    try {
+      await _firebaseFirestore
+          .collection(collection)
+          .doc()
+          .update(data);
+      print("successfully updated");
+      Fluttertoast.showToast(msg: "Successfully updated");
     } catch (e) {
       print(e.toString());
       Fluttertoast.showToast(msg: e.toString());

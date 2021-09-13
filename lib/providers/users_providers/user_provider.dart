@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 import 'package:ecommerce_app/model/cart_item.dart';
 import 'package:ecommerce_app/model/order.dart';
@@ -76,6 +78,9 @@ class UserProvider with ChangeNotifier {
           'email': email,
           'uid': user.user!.uid,
           'stripeId': '',
+          'profilePicture': '',
+          'phoneNumber': '',
+          'address': '',
           'cart': []
         });
         notifyListeners();
@@ -109,6 +114,16 @@ class UserProvider with ChangeNotifier {
       return false;
     }
   }
+
+  // Future<bool> password(
+  //     {String? name, String? phoneNumer, String? location}) async {
+  //   try {
+  //     _status = Status.Authenticated;
+  //     notifyListeners();
+  //     await _firebaseAuth!.currentUser!
+  //         .updateProfile(<String, String?>{'displayName': name});
+  //   } catch (e) {}
+  // }
 
   Future signOut() async {
     _firebaseAuth!.signOut();

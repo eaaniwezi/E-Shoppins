@@ -62,32 +62,58 @@ class DrawerChildren extends StatelessWidget {
         InkWell(
             onTap: () {},
             child: ListTile(
-                title: Text("Categories"),
+                title: Text(
+                  "Categories",
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                  ),
+                ),
                 leading:
                     Icon(Icons.dashboard, color: Style.Colors.secondColor))),
         InkWell(
             onTap: () {},
             child: ListTile(
-                title: Text("Favorites"),
+                title: Text(
+                  "Favorites",
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                  ),
+                ),
                 leading:
                     Icon(Icons.favorite, color: Style.Colors.secondColor))),
         Divider(),
         InkWell(
             onTap: () {},
             child: ListTile(
-                title: Text("Settings"),
+                title: Text(
+                  "Settings",
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                  ),
+                ),
                 leading:
                     Icon(Icons.settings, color: Style.Colors.secondColor))),
         InkWell(
             onTap: () {},
             child: ListTile(
-                title: Text("Languages"),
+                title: Text(
+                  "Languages",
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                  ),
+                ),
                 leading:
                     Icon(Icons.language, color: Style.Colors.secondColor))),
         InkWell(
             onTap: () {},
             child: ListTile(
-                title: Text("About"),
+                title: Text(
+                  "About",
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 16,
+                  ),
+                ),
                 leading: Icon(Icons.help, color: Style.Colors.secondColor))),
         InkWell(
             onTap: () {
