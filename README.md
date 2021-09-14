@@ -6,10 +6,10 @@ I made use of firebase to handle the backend services and Cloud firestore databa
 
 Used:Flutter, Firebase, Cloud firestore database,Firebase Cloud storage, Providers state-management, MVVM design-pattern
 
+![photo_2021-09-14_20-08-33](https://user-images.githubusercontent.com/77903834/133302872-92e3c1ea-1a4f-4df3-95e2-fc1fab8e56b3.jpg)
 ![photo_2021-09-14_20-09-08](https://user-images.githubusercontent.com/77903834/133302863-f12bb20b-51f4-4720-9d55-9863c14bcf97.jpg)
 ![photo_2021-09-14_20-09-05](https://user-images.githubusercontent.com/77903834/133302866-5b3c24ec-4e28-48c4-bfaa-0a07a5563944.jpg)
 ![photo_2021-09-14_20-09-03](https://user-images.githubusercontent.com/77903834/133302869-4eb53bc8-31a7-462d-a208-71b69f4e12a7.jpg)
-![photo_2021-09-14_20-08-33](https://user-images.githubusercontent.com/77903834/133302872-92e3c1ea-1a4f-4df3-95e2-fc1fab8e56b3.jpg)
 ![photo_2021-09-14_20-09-55](https://user-images.githubusercontent.com/77903834/133302874-d9a89728-0521-42e6-b3b5-f3b58230dbc0.jpg)
 ![photo_2021-09-14_20-09-53](https://user-images.githubusercontent.com/77903834/133302876-6ee38b84-9a52-4a2b-9ace-12f928243e53.jpg)
 ![photo_2021-09-14_20-09-52](https://user-images.githubusercontent.com/77903834/133302878-ac42f28f-67b0-4058-9b2b-2108232c38e3.jpg)
