@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_app/model/cart_item.dart';
 import 'package:ecommerce_app/model/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ecommerce_app/model/cart_item.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserServices {
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
@@ -12,7 +11,7 @@ class UserServices {
     try {
       await _firebaseFirestore
           .collection(collection)
-          .doc((data["uid"]))
+          .doc(data["uid"])
           .set(data);
       print('Successfully created');
       Fluttertoast.showToast(msg: "Successfully created");
@@ -22,11 +21,11 @@ class UserServices {
     }
   }
 
-  // updateUsers(Map<String, dynamic> data) async {
+  // updateUsers(Map<String, dynamic> data)  {
   //   try {
-  //     await _firebaseFirestore
+  //      _firebaseFirestore
   //         .collection(collection)
-  //       .doc()
+  //         .doc(data["uid"])
   //         .update(data);
   //     print("successfully updated");
   //     Fluttertoast.showToast(msg: "Successfully updated");

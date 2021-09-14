@@ -64,7 +64,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               vertical: 10,
             ),
             child: Text(
-              widget.product.name.toString(),
+              widget.product.name.toString().toUpperCase(),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w400,

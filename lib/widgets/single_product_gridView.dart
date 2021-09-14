@@ -79,7 +79,7 @@ class SingleProductGridView extends StatelessWidget {
                         Container(
                           width: 100,
                           child: Text(
-                            product.name.toString(),
+                            product.name.toString().toUpperCase(),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,

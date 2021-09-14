@@ -95,6 +95,30 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  // Future<bool> updateProfile({required String name}) async {
+  //   try {
+  //     _status = Status.Authenticated;
+  //     notifyListeners();
+  //     print("maybe workingh");
+  //     await _firebaseAuth!.currentUser!.updateDisplayName(name);
+  //     print("maybe workingh");
+  //     _userServices.updateUsers({"name": name});
+
+  //     notifyListeners();
+  //     // await _user!.up(name);
+  //     Fluttertoast.showToast(msg: "profile updated");
+
+  //     return true;
+  //   } catch (e) {
+  //     _status = Status.Authenticated;
+  //     notifyListeners();
+  //     Fluttertoast.showToast(msg: "error from updating profile");
+  //     print(e.toString());
+  //     Fluttertoast.showToast(msg: e.toString());
+  //     return false;
+  //   }
+  // }
+
   Future<bool> resetPassword(String email) async {
     try {
       _status = Status.Authenticating;
@@ -114,19 +138,6 @@ class UserProvider with ChangeNotifier {
       return false;
     }
   }
-
-  // Future <bool> updatePprofile({required String name, phoneNumber, address}) async {
-  //   try {
-  //     _status = Status.Authenticated;
-  //     notifyListeners();
-  //     await _firebaseAuth!.currentUser!.updateDisplayName(name);
-  //   } catch (e) {
-  //    _status = Status.Authenticated;
-  //     notifyListeners();
-  //     Fluttertoast.showToast(msg: "error from updating profile");
-  //     print(e.toString());
-  //     Fluttertoast.showToast(msg: e.toString());
-  //     return false;
 
   Future signOut() async {
     _firebaseAuth!.signOut();

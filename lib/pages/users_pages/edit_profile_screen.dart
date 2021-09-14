@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/services/user_services.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:ecommerce_app/style/theme.dart' as Style;
 import 'package:ecommerce_app/pages/users_pages/cart_main_screen.dart';
@@ -71,14 +72,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         // ignore: deprecated_member_use
         RaisedButton(
-          onPressed: () {
-            // print("started updating profile");
-            // _userServices.updateUsers({
-            //   "name": "updatedname",
-            //   "phoneNumber": "UpdatedPhoneNumber",
-            //   "address": "nothing"
-            // });
-            // print("done updating profile");
+          onPressed: () async {
+           Fluttertoast.showToast(msg: "Not working yet");
           },
           color: Colors.green,
           padding: EdgeInsets.symmetric(horizontal: 50),

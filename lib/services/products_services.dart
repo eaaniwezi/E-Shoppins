@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/model/product.dart';
 
@@ -12,7 +11,7 @@ class UsersProductServices {
           .get()
           .then((snaps) {
         List<ProductModel> featuredProducts = [];
-         for (DocumentSnapshot featuredProduct in snaps.docs) {
+        for (DocumentSnapshot featuredProduct in snaps.docs) {
           featuredProducts.add(ProductModel.fromSnapshot(featuredProduct));
         }
         return featuredProducts;
@@ -28,7 +27,8 @@ class UsersProductServices {
       });
 
   Future<List<ProductModel>> searchProducts({String? productName}) {
-    String searchKey = productName![0].toUpperCase() + productName.substring(1);
+    String searchKey = productName!;
+    // String searchKey = productName![0].toUpperCase() + productName.substring(1);
     return _firebaseFirestore
         .collection(colllection)
         .orderBy("name")
