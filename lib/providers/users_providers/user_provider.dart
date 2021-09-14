@@ -115,15 +115,18 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  // Future<bool> password(
-  //     {String? name, String? phoneNumer, String? location}) async {
+  // Future <bool> updatePprofile({required String name, phoneNumber, address}) async {
   //   try {
   //     _status = Status.Authenticated;
   //     notifyListeners();
-  //     await _firebaseAuth!.currentUser!
-  //         .updateProfile(<String, String?>{'displayName': name});
-  //   } catch (e) {}
-  // }
+  //     await _firebaseAuth!.currentUser!.updateDisplayName(name);
+  //   } catch (e) {
+  //    _status = Status.Authenticated;
+  //     notifyListeners();
+  //     Fluttertoast.showToast(msg: "error from updating profile");
+  //     print(e.toString());
+  //     Fluttertoast.showToast(msg: e.toString());
+  //     return false;
 
   Future signOut() async {
     _firebaseAuth!.signOut();

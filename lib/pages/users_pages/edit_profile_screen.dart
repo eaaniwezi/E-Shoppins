@@ -72,13 +72,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         // ignore: deprecated_member_use
         RaisedButton(
           onPressed: () {
-            print("started updating profile");
-            _userServices.updateUsers({
-              "name": "updatedname",
-              "phoneNumber": "UpdatedPhoneNumber",
-              "address": "nothing"
-            });
-            print("done updating profile");
+            // print("started updating profile");
+            // _userServices.updateUsers({
+            //   "name": "updatedname",
+            //   "phoneNumber": "UpdatedPhoneNumber",
+            //   "address": "nothing"
+            // });
+            // print("done updating profile");
           },
           color: Colors.green,
           padding: EdgeInsets.symmetric(horizontal: 50),

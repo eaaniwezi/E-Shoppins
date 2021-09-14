@@ -22,19 +22,19 @@ class UserServices {
     }
   }
 
-  updateUsers(Map<String, dynamic> data) async {
-    try {
-      await _firebaseFirestore
-          .collection(collection)
-          .doc()
-          .update(data);
-      print("successfully updated");
-      Fluttertoast.showToast(msg: "Successfully updated");
-    } catch (e) {
-      print(e.toString());
-      Fluttertoast.showToast(msg: e.toString());
-    }
-  }
+  // updateUsers(Map<String, dynamic> data) async {
+  //   try {
+  //     await _firebaseFirestore
+  //         .collection(collection)
+  //       .doc()
+  //         .update(data);
+  //     print("successfully updated");
+  //     Fluttertoast.showToast(msg: "Successfully updated");
+  //   } catch (e) {
+  //     print(e.toString());
+  //     Fluttertoast.showToast(msg: e.toString());
+  //   }
+  // }
 
   Future<UserModel> getUserById(String id) => _firebaseFirestore
       .collection(collection)
