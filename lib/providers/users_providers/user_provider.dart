@@ -64,6 +64,27 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> signInAdmin(String email, String password) async {
+    try {
+      _status = Status.Authenticating;
+      notifyListeners();
+      await _firebaseAuth!
+          .signInWithEmailAndPassword(email: email, password: password);
+          // .then((user) async {
+          //   if (user["isAdmin"] == true)
+          // });
+      print("user succes");
+      return true;
+    } catch (e) {
+      _status = Status.Unauthenticated;
+      notifyListeners();
+      Fluttertoast.showToast(msg: "error from sign in");
+      Fluttertoast.showToast(msg: e.toString());
+      print(e.toString());
+      return false;
+    }
+  }
+
   Future<bool> signUp(String name, String email, String password) async {
     try {
       _status = Status.Authenticating;
@@ -81,7 +102,8 @@ class UserProvider with ChangeNotifier {
           'profilePicture': '',
           'phoneNumber': '',
           'address': '',
-          'cart': []
+          'cart': [],
+          "isAdmin": false,
         });
         notifyListeners();
       });

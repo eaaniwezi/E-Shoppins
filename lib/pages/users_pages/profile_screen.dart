@@ -286,7 +286,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               userProvider.userModel?.name ?? "username loading...",
               style: TextStyle(
                 color: Style.Colors.mainColor,
-                fontSize: 15,
+                fontSize: 12,
               ),
             ),
             // SizedBox(height: 5),
@@ -294,7 +294,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               userProvider.userModel?.email ?? "email loading...",
               style: TextStyle(
                 color: Style.Colors.mainColor,
-                fontSize: 15,
+                fontSize: 12,
               ),
             ),
             SizedBox(height: 5),

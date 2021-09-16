@@ -1,40 +1,3 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:ecommerce_app/model/cart_item.dart';
-
-// class UserModel {
-//   final String? uid, name, email, stripeId;
-//   final int? priceSum;
-//   List<CartItemModel>? cart;
-
-//   UserModel({
-//     this.priceSum,
-//     this.cart,
-//     this.uid,
-//     this.name,
-//     this.email,
-//     this.stripeId,
-//   });
-
-//   factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
-//     //
-//     List<CartItemModel> _convertedCartItems(List cart) {
-//       List<CartItemModel> convertedCart = [];
-//       for (Map cartItem in cart) {
-//         convertedCart.add(CartItemModel.fromMap(cartItem));
-//       }
-//       return convertedCart;
-//     }
-
-//     return UserModel(
-//       uid: snapshot["uid"],
-//       name: snapshot["name"],
-//       email: snapshot["email"],
-//       stripeId: snapshot["stripeId"] ?? "",
-//       cart: _convertedCartItems(snapshot["cart"] ?? []),
-//     );
-//   }
-// }
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'cart_item.dart';
@@ -48,6 +11,7 @@ class UserModel {
   static const ADDRESS = "address";
   static const STRIPE_ID = "stripeId";
   static const CART = "cart";
+  static const ISADMIN = 'isAdmin';
 
   String? _name;
   String? _email;
@@ -57,6 +21,7 @@ class UserModel {
   String? _id;
   String? _stripeId;
   num _priceSum = 0;
+  bool _isAdmin = false;
 
 //  getters
   String? get name => _name;
@@ -65,6 +30,7 @@ class UserModel {
   String? get phoneNumber => _phoneNumber;
   String? get address => _address;
   String? get id => _id;
+  bool? get isAdmin => _isAdmin;
 
   String? get stripeId => _stripeId;
 
@@ -79,6 +45,7 @@ class UserModel {
     _phoneNumber = snapshot[PHONENUMBER];
     _address = snapshot[ADDRESS];
     _id = snapshot[ID];
+    _isAdmin = snapshot[ISADMIN];
     _stripeId = snapshot[STRIPE_ID] ?? "";
     cart = _convertCartItems(snapshot[CART] ?? []);
     totalCartPrice =

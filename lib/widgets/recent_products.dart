@@ -1,10 +1,7 @@
-import 'package:ecommerce_app/providers/users_providers/product_providers.dart';
-import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
 import 'package:flutter/material.dart';
-
-import 'package:ecommerce_app/model/popular_products.dart';
-import 'package:ecommerce_app/widgets/single_product_gridView.dart';
 import 'package:provider/provider.dart';
+import 'package:ecommerce_app/widgets/single_product_gridView.dart';
+import 'package:ecommerce_app/providers/users_providers/product_providers.dart';
 
 class RecentProductsBuilder extends StatelessWidget {
   const RecentProductsBuilder({Key? key}) : super(key: key);
@@ -13,7 +10,6 @@ class RecentProductsBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     final productProvider =
         Provider.of<UsersProductProvider>(context, listen: false);
-    // final List<PopularProducts> _popularProducts = popularProducts;
     return Container(
       margin: EdgeInsetsDirectional.all(5),
       height: 500,

@@ -52,7 +52,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     Text(
                       "Costs: ",
                       style: TextStyle(
-                        fontSize: 15,
+                     fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: Style.Colors.secondColor,
                       ),
@@ -60,7 +60,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     Text(
                       "\$${_order.totalPrice! / 100}",
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     )
@@ -71,23 +71,16 @@ class _OrderScreenState extends State<OrderScreen> {
                     Text(
                       "Order-Description: ",
                       style: TextStyle(
-                        fontSize: 15,
+                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: Style.Colors.secondColor,
                       ),
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Container(
-                        height: 20,
-                        width: MediaQuery.of(context).size.width * .5,
-                        child: Text(
-                          _order.description.toString(),
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                    Text(
+                      _order.description.toString(),
+                      style: TextStyle(
+                       fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     )
                   ],
@@ -97,7 +90,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     Text(
                       "Date:  ",
                       style: TextStyle(
-                        fontSize: 15,
+                    fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: Style.Colors.secondColor,
                       ),
@@ -106,7 +99,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       DateTime.fromMillisecondsSinceEpoch(_order.createdAt ?? 0)
                           .toString(),
                       style: TextStyle(
-                        fontSize: 15,
+                     fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -117,7 +110,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     Text(
                       "Status:  ",
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: Style.Colors.secondColor,
                       ),
@@ -125,7 +118,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     Text(
                       _order.status.toString(),
                       style: TextStyle(
-                        fontSize: 15,
+                    fontSize: 12,
                         color: Style.Colors.greenColor,
                         fontWeight: FontWeight.bold,
                       ),

@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/pages/admin_pages/admin_add_product_screen.dart';
+import 'package:ecommerce_app/providers/users_providers/product_providers.dart';
+import 'package:ecommerce_app/providers/users_providers/user_provider.dart';
+import 'package:provider/provider.dart';
 import '../../database/brand.dart';
 import 'package:flutter/material.dart';
 import '../../database/category.dart';
@@ -298,6 +302,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   }
 
   _firstPart() {
+    final productProvider =
+        Provider.of<UsersProductProvider>(context, listen: false);
+
+    final userProvider = Provider.of<UserProvider>(context);
     return Row(
       children: <Widget>[
         Expanded(
@@ -310,13 +318,25 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     ListTile(
-                      title: Text(
-                        "7",
-                        style: Theme.of(context).textTheme.headline4!.copyWith(
-                              color: Style.Colors.whiteColor,
-                              fontSize: 24.0,
-                            ),
-                      ),
+                      title: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection("users")
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            return (snapshot.connectionState ==
+                                    ConnectionState.waiting)
+                                ? Center(child: CircularProgressIndicator())
+                                : Text(
+                                    snapshot.data!.docs.length.toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline4!
+                                        .copyWith(
+                                          color: Style.Colors.whiteColor,
+                                          fontSize: 24.0,
+                                        ),
+                                  );
+                          }),
                       trailing: Icon(
                         FontAwesomeIcons.user,
                         color: Style.Colors.titleColor,
@@ -342,13 +362,25 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     ListTile(
-                      title: Text(
-                        "120",
-                        style: Theme.of(context).textTheme.headline4!.copyWith(
-                              color: Style.Colors.whiteColor,
-                              fontSize: 24.0,
-                            ),
-                      ),
+                      title: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection("products")
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            return (snapshot.connectionState ==
+                                    ConnectionState.waiting)
+                                ? Center(child: CircularProgressIndicator())
+                                : Text(
+                                    snapshot.data!.docs.length.toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline4!
+                                        .copyWith(
+                                          color: Style.Colors.whiteColor,
+                                          fontSize: 24.0,
+                                        ),
+                                  );
+                          }),
                       trailing: Icon(
                         FontAwesomeIcons.campground,
                         color: Style.Colors.titleColor,
@@ -380,13 +412,25 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     ListTile(
-                      title: Text(
-                        "15",
-                        style: Theme.of(context).textTheme.headline4!.copyWith(
-                              color: Style.Colors.whiteColor,
-                              fontSize: 24.0,
-                            ),
-                      ),
+                      title: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection("categories")
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            return (snapshot.connectionState ==
+                                    ConnectionState.waiting)
+                                ? Center(child: CircularProgressIndicator())
+                                : Text(
+                                    snapshot.data!.docs.length.toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline4!
+                                        .copyWith(
+                                          color: Style.Colors.whiteColor,
+                                          fontSize: 24.0,
+                                        ),
+                                  );
+                          }),
                       trailing: Icon(
                         Icons.category,
                         color: Style.Colors.titleColor,
@@ -412,12 +456,22 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     ListTile(
-                      title: Text(
-                        "25",
-                        style: Theme.of(context).textTheme.headline4!.copyWith(
-                              fontSize: 24.0,
-                              color: Style.Colors.whiteColor,
-                            ),
+                      title: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection("orders")
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            return (snapshot.connectionState ==
+                                    ConnectionState.waiting)
+                                ? Center(child: CircularProgressIndicator())
+                                : Text(
+                                   snapshot.data!.docs.length.toString(),
+                            style: Theme.of(context).textTheme.headline4!.copyWith(
+                                  fontSize: 24.0,
+                                  color: Style.Colors.whiteColor,
+                                ),
+                          );
+                        }
                       ),
                       trailing: Icon(
                         FontAwesomeIcons.smile,

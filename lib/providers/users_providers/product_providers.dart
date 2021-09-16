@@ -11,7 +11,7 @@ class UsersProductProvider with ChangeNotifier {
   UsersProductProvider.initialize() {
     loadProducts();
     loadFeaturedProducts();
-    search( );
+    search(productName: '' );
   }
 
   loadFeaturedProducts() async {
@@ -23,7 +23,7 @@ class UsersProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future search({ String? productName}) async {
+  Future search({ required String productName}) async {
     productsSearched =
         await _usersProductServices.searchProducts(productName: productName);
     print(productsSearched);

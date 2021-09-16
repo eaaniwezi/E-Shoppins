@@ -94,9 +94,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           "email": user!.email,
           "address": "",
           "profilePicture": user!.photoURL,
-          "phoneNumber":'',
+          "phoneNumber": '',
           "stripeId": "",
-          "cart": []
+          "cart": [],
+          "isAdmin": false,
         });
 
         await preferences!.setString("id", user!.uid);

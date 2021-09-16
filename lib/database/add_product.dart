@@ -11,6 +11,7 @@ class AdminProductServices {
     data["id"] = productId;
     _firebaseFirestore.collection(ref).doc(productId).set(data);
   }
+  
 
   // void uploadProduct({required String productName, brand, category, required int quantity,  required List sizes, images, required double price}) {
   //   var id = Uuid();

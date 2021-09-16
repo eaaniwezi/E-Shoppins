@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 15.0),
                 createAccount(),
                 SizedBox(height: 15.0),
-                isAdmin(),
+                // isAdmin(),
               ],
             ),
           ),

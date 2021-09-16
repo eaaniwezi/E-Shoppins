@@ -26,8 +26,8 @@ class UsersProductServices {
         return products;
       });
 
-  Future<List<ProductModel>> searchProducts({String? productName}) {
-    String searchKey = productName!;
+  Future<List<ProductModel>> searchProducts({required String productName}) {
+    String searchKey = productName;
     // String searchKey = productName![0].toUpperCase() + productName.substring(1);
     return _firebaseFirestore
         .collection(colllection)
